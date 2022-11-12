@@ -33,17 +33,23 @@ builder.Services.AddScoped<ITokenUtil, JWTTokenUtil>();
 builder.Services.AddScoped<IAccountUtil, AccountUtil>();
 
 // CORS
-var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-builder.Services.AddCors(options =>
+// var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+// builder.Services.AddCors(options =>
+// {
+//     options.AddPolicy(name: MyAllowSpecificOrigins, builder =>
+//     {
+//         builder.WithOrigins("http://127.0.0.1:4200", "http://localhost:4200")
+//         .AllowAnyHeader()
+//         .AllowAnyMethod()
+//         .AllowCredentials();
+//     });
+// });
+
+//services cors
+builder.Services.AddCors(p => p.AddPolicy("MyAllowSpecificOrigins", builder =>
 {
-    options.AddPolicy(name: MyAllowSpecificOrigins, builder =>
-    {
-        builder.WithOrigins("http://127.0.0.1:4200", "http://localhost:4200")
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials();;
-    });
-});
+    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+}));
 
 // JWT
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
@@ -69,7 +75,7 @@ var app = builder.Build();
 
 app.UseRouting();
 
-app.UseCors(MyAllowSpecificOrigins);
+app.UseCors("MyAllowSpecificOrigins");
 
 app.UseHttpsRedirection();
 

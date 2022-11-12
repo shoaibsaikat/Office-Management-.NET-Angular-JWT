@@ -6,3 +6,7 @@ Issues:
 2. Fix CORS issue in .NET
 3. Fix empty email in profile update and also email error check
 4. Need to check why response is sometimes parsed as msg.text and sometimes msg. i.e. inventory quick edit vs create.
+
+
+Some helpful commands,
+1. 'npm install --save-dev @angular/cli@latest' to fix 'could not find module '@angular-devkit/build-angular' issue.
