@@ -52,7 +52,7 @@ class RequisitionRepository : IRequisitionRepository
                 total = item.Inventory.Count,
                 unit = item.Inventory.Unit,
                 user_id = item.UserId,
-                user_name = item.User.FirstName + " " + item.User.LeaveUsers,
+                user_name = item.User.FirstName + " " + item.User.LastName,
                 approver_id = item.ApproverId,
                 approver_name = item.Approver.FirstName + " " + item.Approver.LastName,
                 distributor_id = item.DistributorId,
