@@ -2,8 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 export class Common {
 
-    private baseUrl: string = 'https://127.0.0.1:7000/api/';
-    // private baseUrl: string = 'http://127.0.0.1:5031/api/';
+    // private baseUrl: string = 'https://127.0.0.1:7000/api/';
+    private baseUrl: string = 'http://127.0.0.1:5031/api/';
 
     static readonly DETAIL_NORMAL: number = 0;
     static readonly DETAIL_APPROVAL: number = 1;

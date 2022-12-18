@@ -168,6 +168,7 @@ class AccountRepository : IAccountRepository
         return true;
     }
 
+    // Returns all users in response format
     async Task<IEnumerable<AccountResponseModel>> IAccountRepository.GetAllResponseUser()
     {
         var list = await _context.Users.ToListAsync();
@@ -181,7 +182,7 @@ class AccountRepository : IAccountRepository
                     id = item.Id,
                     username = item.Username,
                     first_name = item.FirstName,
-                    last_name = item.LastName
+                    last_name = item.LastName == null ? "" : item.LastName
                 });
             }
         }

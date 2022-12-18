@@ -8,108 +8,19 @@ public class RequisitionController : ControllerBase
 {
     private readonly ILogger<InventoryController> _logger;
     private readonly IInventoryRepository _inventory_repo;
+    private readonly IRequisitionRepository _requisition_repo;
     private readonly IAccountUtil _account_util;
 
-    public RequisitionController(ILogger<InventoryController> logger, IAccountUtil accountUtil, IInventoryRepository repo)
+    public RequisitionController(ILogger<InventoryController> logger, IAccountUtil accountUtil, IInventoryRepository inventoryRepo, IRequisitionRepository requisitionRepo)
     {
         _logger = logger;
         _account_util = accountUtil;
-        _inventory_repo = repo;
+        _requisition_repo = requisitionRepo;
+        _inventory_repo = inventoryRepo;
     }
 
-    // [Route("api/inventory/inventory_list")]
-    // [HttpGet]
-    // public async Task<IActionResult> GetChartList()
-    // {
-    //     return Ok(await _inventory_repo.GetAllList());
-    // }
-
-    // [Route("api/inventory")]
-    // [HttpGet]
-    // public async Task<IActionResult> GetAllList()
-    // {
-    //     var user = await _account_util.AuthorizeUser(Request);
-    //     if (user == null || !(user.can_distribute_inventory || user.can_approve_inventory))
-    //     {
-    //         return Unauthorized();
-    //     }
-
-    //     var list = (List<ResponseModels.InventoryResponseModel>)await _inventory_repo.GetAllList();
-    //     return Ok(new
-    //     {
-    //         count = list.Count,
-    //         inventory_list = list,
-    //     });
-    // }
-
-    // [Route("api/inventory/quick_edit")]
-    // [HttpPost]
-    // public async Task<IActionResult> QuickUpdate()
-    // {
-    //     var user = await _account_util.AuthorizeUser(Request);
-    //     if (user == null || !(user.can_distribute_inventory || user.can_approve_inventory))
-    //     {
-    //         return Unauthorized();
-    //     }
-
-    //     using (var reader = new StreamReader(Request.Body))
-    //     {
-    //         var body = await reader.ReadToEndAsync();
-    //         var bodyJson = JObject.Parse(body);
-    //         var pk = Convert.ToInt32(bodyJson.GetValue("pk")?.ToString());
-    //         var amount = Convert.ToUInt32(bodyJson.GetValue("amount")?.ToString());
-    //         if (await _inventory_repo.Update(pk, amount))
-    //         {
-    //             return Ok("Inventory updated");
-    //         }
-    //         return NotFound("Asset assign failed");
-    //     }
-    // }
-
-    // [HttpGet, HttpPost]
-    // [Route("api/inventory/edit/{id:int}")]
-    // [Produces("application/json")]
-    // [Consumes("application/json")]
-    // public async Task<IActionResult> Update(int id)
-    // {
-    //     var user = await _account_util.AuthorizeUser(Request);
-    //     if (user == null || !(user.can_distribute_inventory || user.can_approve_inventory))
-    //     {
-    //         return Unauthorized();
-    //     }
-
-    //     if (Request.Method == "GET")
-    //     {
-    //         var item = await _inventory_repo.GetById(id);
-    //         if (item != null)
-    //         {
-    //             return Ok(new
-    //             {
-    //                 description = item.description
-    //             });
-    //         }
-    //         return NotFound("Inventory not found");
-    //     }
-    //     else if (Request.Method == "POST")
-    //     {
-    //         using (var reader = new StreamReader(Request.Body))
-    //         {
-    //             var body = await reader.ReadToEndAsync();
-    //             var bodyJson = JObject.Parse(body);
-    //             var amount = Convert.ToUInt32(bodyJson.GetValue("count")?.ToString());
-    //             var description = bodyJson.GetValue("description")?.ToString();
-    //             if (await _inventory_repo.Update(id, amount))
-    //             {
-    //                 return Ok("Inventory updated");
-    //             }
-    //             return NotFound("Inventory assign failed");
-    //         }
-    //     }
-    //     return NotFound();
-    // }
-
-    [HttpPost]
-    [Route("api/requisition/create")]
+    [HttpGet, HttpPost]
+    [Route("api/inventory/requisition/create")]
     [Produces("application/json")]
     [Consumes("application/json")]
     public async Task<IActionResult> Create()
@@ -122,9 +33,12 @@ public class RequisitionController : ControllerBase
 
         if (Request.Method == "GET")
         {
-            // TODO:
-            // return all inventory
-            // return all valid approver
+            var inventoryList = (List<ResponseModels.InventoryResponseModel>)await _inventory_repo.GetAllList();
+            return Ok(new
+            {
+                approver_list = await _account_util.GetAllResponseUser(),
+                inventory_list = inventoryList,
+            });
         }
         else if (Request.Method == "POST")
         {
@@ -132,20 +46,42 @@ public class RequisitionController : ControllerBase
             {
                 var body = await reader.ReadToEndAsync();
                 var bodyJson = JObject.Parse(body);
-                var name = bodyJson.GetValue("name")?.ToString();
-                var count = Convert.ToUInt32(bodyJson.GetValue("count")?.ToString());
-                var unit = bodyJson.GetValue("unit")?.ToString();
-                var description = bodyJson.GetValue("description")?.ToString();
+                var title = bodyJson.GetValue("title")?.ToString();
+                var amount = Convert.ToUInt32(bodyJson.GetValue("amount")?.ToString());
+                var inventory = Convert.ToInt32(bodyJson.GetValue("inventory")?.ToString());
+                var approver = Convert.ToInt32(bodyJson.GetValue("approver")?.ToString());
+                var comment = bodyJson.GetValue("comment")?.ToString();
 
-                if (!String.IsNullOrEmpty(name) && !String.IsNullOrEmpty(unit))
+                if (!String.IsNullOrEmpty(title) && amount > 0 && inventory > 0 && approver > 0)
                 {
-                    await _inventory_repo.Create(name, count, unit, description);
-                    return Ok("Asset created");
+                    await _requisition_repo.Create(userId.Value, title, inventory, approver, amount, comment);
+                    return Ok("Requisition created");
                 }
             }
         }
 
-        
+        return NotFound();
+    }
+
+    [HttpGet]
+    [Route("api/inventory/requisition/my_list")]
+    [Produces("application/json")]
+    [Consumes("application/json")]
+    public async Task<IActionResult> GetMyList()
+    {
+        var userId = _account_util.AuthorizeRequest(Request);
+        if (userId == null)
+        {
+            return Unauthorized();
+        }
+        if (Request.Method == "GET")
+        {
+            var list = (List<ResponseModels.RequisitionResponseModel>)await _requisition_repo.GetRequisitionListById(userId.Value);
+            return Ok(new
+            {
+                requisition_list = list
+            });
+        }
         return NotFound();
     }
 }

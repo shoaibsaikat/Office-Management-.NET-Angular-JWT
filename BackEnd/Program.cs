@@ -29,6 +29,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(dbContextOptions => dbContex
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IAssetRepository, AssetRepository>();
 builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
+builder.Services.AddScoped<IRequisitionRepository, RequisitionRepository>();
 builder.Services.AddScoped<ITokenUtil, JWTTokenUtil>();
 builder.Services.AddScoped<IAccountUtil, AccountUtil>();
 

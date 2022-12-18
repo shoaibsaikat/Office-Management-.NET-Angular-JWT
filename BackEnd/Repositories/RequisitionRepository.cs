@@ -13,63 +13,56 @@ class RequisitionRepository : IRequisitionRepository
         _context = context;
     }
 
-    // async Task<IEnumerable<InventoryResponseModel>> IInventoryRepository.GetAllList()
-    // {
-    //     var list = await _context.Inventories.ToListAsync();
-    //     var responseList = new List<InventoryResponseModel>();
-    //     foreach (var item in list)
-    //     {
-    //         var model = new InventoryResponseModel {
-    //             id = item.Id,
-    //             name = item.Name,
-    //             count = item.Count,
-    //             unit = item.Unit
-    //         };
-    //         responseList.Add(model);
-    //     }
-    //     return responseList;
-    // }
+    async Task<Boolean> IRequisitionRepository.Create(int user, string title, int inventory, int apporver, UInt32 amount, string? comment)
+    {
+        var requisition = new Requisition()
+        {
+            Title = title,
+            Amount = amount,
+            Comment = comment,
+            RequestDate = DateTime.UtcNow,
+            UserId = user,
+            ApproverId = apporver,
+            InventoryId = inventory
+        };
+        await _context.Requisitions.AddAsync(requisition);
+        await _context.SaveChangesAsync();
+        return true;
+    }
 
-    // async Task<InventoryResponseModel?> IInventoryRepository.GetById(int id)
-    // {
-    //     var item = await _context.Inventories.FirstOrDefaultAsync(i => i.Id == id);
-    //     if (item != null)
-    //     {
-    //         return new InventoryResponseModel
-    //         {
-    //             id = item.Id,
-    //             name = item.Name,
-    //             count = item.Count,
-    //             unit = item.Unit,
-    //             description = item.Description == null ? String.Empty : item.Description,
-    //         };
-    //     }
-    //     return null;
-    // }
-
-    // async Task<Boolean> IInventoryRepository.Update(int id, UInt32 amount)
-    // {
-    //     var item = await _context.Inventories.FirstOrDefaultAsync(i => i.Id == id);
-    //     if (item != null)
-    //     {
-    //         item.Count = amount;
-    //         await _context.SaveChangesAsync();
-    //         return true;
-    //     }
-    //     return false;
-    // }
-
-    // async Task<Boolean> IInventoryRepository.Create(string name, UInt32 count, string unit, string? description)
-    // {
-    //     var inventory = new Inventory()
-    //     {
-    //         Name = name,
-    //         Count = count,
-    //         Unit = unit,
-    //         Description = description
-    //     };
-    //     await _context.Inventories.AddAsync(inventory);        
-    //     await _context.SaveChangesAsync();
-    //     return true;
-    // }
+    async Task<IEnumerable<RequisitionResponseModel>> IRequisitionRepository.GetRequisitionListById(int userId)
+    {
+        var list = await _context.Requisitions
+                            .Include(i => i.User)
+                            .Include(i => i.Inventory)
+                            .Include(i => i.Approver)
+                            .Include(i => i.Distributor)
+                            .Where(i => i.UserId == userId)
+                            .ToListAsync();
+        // .Include() is a lazy loading, foreign tables are not by default included in query, rather they has to be explicitly loaded
+        var responseList = new List<RequisitionResponseModel>();
+        foreach (var item in list)
+        {
+            var model = new RequisitionResponseModel {
+                id = item.Id,
+                item_name = item.Inventory.Name,
+                title = item.Title,
+                date = item.RequestDate,
+                amount = item.Amount,
+                total = item.Inventory.Count,
+                unit = item.Inventory.Unit,
+                user_id = item.UserId,
+                user_name = item.User.FirstName + " " + item.User.LeaveUsers,
+                approver_id = item.ApproverId,
+                approver_name = item.Approver.FirstName + " " + item.Approver.LastName,
+                distributor_id = item.DistributorId,
+                distributor_name = item.Distributor?.FirstName + " " + item.Distributor?.LastName,
+                approved = item.Approved,
+                distributed = item.Distributed,
+                comment = item.Comment
+            };
+            responseList.Add(model);
+        }
+        return responseList;
+    }
 }

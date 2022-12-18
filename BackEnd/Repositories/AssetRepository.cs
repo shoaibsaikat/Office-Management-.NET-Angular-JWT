@@ -41,7 +41,7 @@ class AssetRepository : IAssetRepository
         var assetList = new List<AssetResponseModel>();
         // eager loading
         // without eager loading we'll get null in item.User.FirstName
-        var list = await _context.Assets.Include(u => u.User).ToListAsync();
+        var list = await _context.Assets.Include(i => i.User).ToListAsync();
         foreach (var item in list)
         {
             assetList.Add(new AssetResponseModel

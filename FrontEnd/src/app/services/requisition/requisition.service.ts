@@ -59,7 +59,7 @@ export class RequisitionService {
   }
 
   createRequisition(title: string, inventory: number, approver: number, amount: number, comment: string): Observable<string> {
-    console.log(title + ":" + inventory + ":" + approver + ":" + amount + ":" + comment);
+    // console.log(title + ":" + inventory + ":" + approver + ":" + amount + ":" + comment);
     return this.http.post<string>(this.createUrl, {
       title: title,
       inventory: inventory,
