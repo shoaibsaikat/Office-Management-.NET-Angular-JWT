@@ -38,6 +38,11 @@ class AccountUtil : IAccountUtil
         return await _account_repo.GetAllRequisitionDistributor();
     }
 
+    async Task<IEnumerable<AccountResponseModel>> IAccountUtil.GetAllManager()
+    {
+        return await _account_repo.GetAllManager();
+    }
+
     async Task<IEnumerable<AccountResponseModel>> IAccountUtil.GetAllUser()
     {
         return await _account_repo.GetAllUser();

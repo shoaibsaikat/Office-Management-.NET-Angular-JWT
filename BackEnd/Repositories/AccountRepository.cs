@@ -231,6 +231,27 @@ class AccountRepository : IAccountRepository
         return responseList;
     }
 
+    // get all user who can approve leave
+    async Task<IEnumerable<AccountResponseModel>> IAccountRepository.GetAllManager()
+    {
+        var list = await _context.Users.Where(i => i.CanApproveLeave).ToListAsync();
+        var responseList = new List<AccountResponseModel>();
+        foreach (var item in list)
+        {
+            if (!String.IsNullOrEmpty(item.FirstName))
+            {
+                responseList.Add(new AccountResponseModel
+                {
+                    id = item.Id,
+                    username = item.Username,
+                    first_name = item.FirstName,
+                    last_name = item.LastName == null ? "" : item.LastName
+                });
+            }
+        }
+        return responseList;
+    }
+
     async Task<Boolean> IAccountRepository.SetManager(int id, int mangerId)
     {
         var user = await _context.Users.FirstAsync(u => u.Id == id);

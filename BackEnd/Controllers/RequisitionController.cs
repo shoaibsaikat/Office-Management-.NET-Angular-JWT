@@ -130,7 +130,55 @@ public class RequisitionController : ControllerBase
         }
         else if (Request.Method == "POST")
         {
-            throw new NotImplementedException();
+            using (var reader = new StreamReader(Request.Body))
+            {
+                var body = await reader.ReadToEndAsync();
+                var bodyJson = JObject.Parse(body);
+                var id = Convert.ToInt32(bodyJson.GetValue("pk")?.ToString());
+                var distributor = Convert.ToInt32(bodyJson.GetValue("distributor")?.ToString());
+                if (await _requisition_repo.ApproveRequisition(id, distributor))
+                {
+                    return Ok("Requisition approved");
+                }
+                return NotFound("Requisition approval failed");
+            }
+        }
+        return NotFound();
+    }
+
+    [HttpGet, HttpPost]
+    [Route("api/inventory/requisition/distribution")]
+    [Produces("application/json")]
+    [Consumes("application/json")]
+    public async Task<IActionResult> Distribute()
+    {
+        var user = await _account_util.AuthorizeUser(Request);
+        if (user == null || !user.can_distribute_inventory)
+        {
+            return Unauthorized();
+        }
+        if (Request.Method == "GET")
+        {
+            var requisitionList = (List<ResponseModels.RequisitionResponseModel>)await _requisition_repo.GetPendingDistributionList(user.id);
+            return Ok(new
+            {
+                requisition_list = requisitionList,
+                count = requisitionList.Count
+            });
+        }
+        else if (Request.Method == "POST")
+        {
+            using (var reader = new StreamReader(Request.Body))
+            {
+                var body = await reader.ReadToEndAsync();
+                var bodyJson = JObject.Parse(body);
+                var id = Convert.ToInt32(bodyJson.GetValue("pk")?.ToString());
+                if (await _requisition_repo.DistributeRequisition(id))
+                {
+                    return Ok("Item distributed");
+                }
+                return NotFound("Distribution failed! Inventory low, please add items to the inventory first.");
+            }
         }
         return NotFound();
     }

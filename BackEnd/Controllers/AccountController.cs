@@ -126,7 +126,7 @@ public class AccountController : ControllerBase
 
         if (Request.Method == "GET")
         {
-            var responseList = _account_repo.GetAllUser();
+            var responseList = _account_repo.GetAllManager();
             return Ok(new
             {
                 user_list = responseList

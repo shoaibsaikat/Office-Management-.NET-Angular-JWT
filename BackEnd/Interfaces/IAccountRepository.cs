@@ -11,5 +11,6 @@ public interface IAccountRepository
     public Task<IEnumerable<AccountResponseModel>> GetAllUser();
     public Task<IEnumerable<AccountResponseModel>> GetAllRequisitionApprover();
     public Task<IEnumerable<AccountResponseModel>> GetAllRequisitionDistributor();
+    public Task<IEnumerable<AccountResponseModel>> GetAllManager();
     public Task<Boolean> SetManager(int id, int mangerId);
 }

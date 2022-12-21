@@ -35,3 +35,14 @@ Misc.
 1. dotnet tool update <package_name>
 2. dotnet dev-certs https --trust
 3. For certificate issue go to "chrome://flags/" or "edge://flags/", then enable "Allow invalid certificates for resources loaded from localhost."
+
+How to register new user:
+1. Open postman and enter below url,
+    https://localhost:7000/api/user/register
+
+2. In body tab enter below information,
+{
+    "username":"user_name",
+    "password":"password",
+    "super": false
+}

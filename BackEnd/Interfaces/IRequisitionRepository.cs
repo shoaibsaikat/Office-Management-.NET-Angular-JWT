@@ -7,4 +7,7 @@ public interface IRequisitionRepository
     public Task<IEnumerable<RequisitionResponseModel>> GetRequisitionListById(int userId);
     public Task<IEnumerable<RequisitionResponseModel>> GetAllRequisitionList();
     public Task<IEnumerable<RequisitionResponseModel>> GetPendingApprovalList(int userId);
+    public Task<Boolean> ApproveRequisition(int id, int distributorId);
+    public Task<IEnumerable<RequisitionResponseModel>> GetPendingDistributionList(int userId);
+    public Task<Boolean> DistributeRequisition(int id);
 }
