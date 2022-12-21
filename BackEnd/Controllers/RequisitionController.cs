@@ -25,8 +25,8 @@ public class RequisitionController : ControllerBase
     [Consumes("application/json")]
     public async Task<IActionResult> Create()
     {
-        var userId = _account_util.AuthorizeRequest(Request);
-        if (userId == null)
+        var user = await _account_util.AuthorizeUser(Request);
+        if (user == null)
         {
             return Unauthorized();
         }
@@ -54,7 +54,7 @@ public class RequisitionController : ControllerBase
 
                 if (!String.IsNullOrEmpty(title) && amount > 0 && inventory > 0 && approver > 0)
                 {
-                    await _requisition_repo.Create(userId.Value, title, inventory, approver, amount, comment);
+                    await _requisition_repo.Create(user.id, title, inventory, approver, amount, comment);
                     return Ok("Requisition created");
                 }
             }
@@ -69,14 +69,36 @@ public class RequisitionController : ControllerBase
     [Consumes("application/json")]
     public async Task<IActionResult> GetMyList()
     {
-        var userId = _account_util.AuthorizeRequest(Request);
-        if (userId == null)
+        var user = await _account_util.AuthorizeUser(Request);
+        if (user == null)
         {
             return Unauthorized();
         }
         if (Request.Method == "GET")
         {
-            var list = (List<ResponseModels.RequisitionResponseModel>)await _requisition_repo.GetRequisitionListById(userId.Value);
+            var list = (List<ResponseModels.RequisitionResponseModel>)await _requisition_repo.GetRequisitionListById(user.id);
+            return Ok(new
+            {
+                requisition_list = list
+            });
+        }
+        return NotFound();
+    }
+
+    [HttpGet]
+    [Route("api/inventory/requisition/history")]
+    [Produces("application/json")]
+    [Consumes("application/json")]
+    public async Task<IActionResult> GetAll()
+    {
+        var user = await _account_util.AuthorizeUser(Request);
+        if (user == null || !(user.can_distribute_inventory || user.can_approve_inventory))
+        {
+            return Unauthorized();
+        }
+        if (Request.Method == "GET")
+        {
+            var list = (List<ResponseModels.RequisitionResponseModel>)await _requisition_repo.GetAllRequisitionList();
             return Ok(new
             {
                 requisition_list = list
