@@ -23,14 +23,24 @@ class AccountUtil : IAccountUtil
         var userId =  _tokenUtil.ValidateToken(request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last());
         if (userId != null)
         {
-            return await _account_repo.GetResponseUserById(userId.Value);
+            return await _account_repo.GetUserById(userId.Value);
         }
         return null;
     }
 
-    async Task<IEnumerable<AccountResponseModel>> IAccountUtil.GetAllResponseUser()
+    async Task<IEnumerable<AccountResponseModel>> IAccountUtil.GetAllRequisitionApprover()
     {
-        return await _account_repo.GetAllResponseUser();
+        return await _account_repo.GetAllRequisitionApprover();
+    }
+
+    async Task<IEnumerable<AccountResponseModel>> IAccountUtil.GetAllRequisitionDistributor()
+    {
+        return await _account_repo.GetAllRequisitionDistributor();
+    }
+
+    async Task<IEnumerable<AccountResponseModel>> IAccountUtil.GetAllUser()
+    {
+        return await _account_repo.GetAllUser();
     }
 
 }

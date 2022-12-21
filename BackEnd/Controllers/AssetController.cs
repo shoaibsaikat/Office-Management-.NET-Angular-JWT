@@ -58,7 +58,7 @@ public class AssetController : ControllerBase
             return Ok(new
             {
                 asset_list = list,
-                user_list = await _account_util.GetAllResponseUser(),
+                user_list = await _account_util.GetAllUser(),
                 count = list.Count,
             });
         }

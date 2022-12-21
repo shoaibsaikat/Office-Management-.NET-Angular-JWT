@@ -81,7 +81,7 @@ public class AccountController : ControllerBase
         {
             return Unauthorized();
         }
-        var user = await _account_repo.GetResponseUserById(userId.Value);
+        var user = await _account_repo.GetUserById(userId.Value);
         return Ok(user);
     }
 
@@ -126,7 +126,7 @@ public class AccountController : ControllerBase
 
         if (Request.Method == "GET")
         {
-            var responseList = _account_repo.GetAllResponseUser();
+            var responseList = _account_repo.GetAllUser();
             return Ok(new
             {
                 user_list = responseList

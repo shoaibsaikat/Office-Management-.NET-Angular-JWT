@@ -137,7 +137,7 @@ class AccountRepository : IAccountRepository
         return true;
     }
 
-    async Task<AccountResponseModel> IAccountRepository.GetResponseUserById(int id)
+    async Task<AccountResponseModel> IAccountRepository.GetUserById(int id)
     {
         var user = await _context.Users.FirstAsync(u => u.Id == id);
         var account = new AccountResponseModel
@@ -169,9 +169,51 @@ class AccountRepository : IAccountRepository
     }
 
     // Returns all users in response format
-    async Task<IEnumerable<AccountResponseModel>> IAccountRepository.GetAllResponseUser()
+    async Task<IEnumerable<AccountResponseModel>> IAccountRepository.GetAllUser()
     {
         var list = await _context.Users.ToListAsync();
+        var responseList = new List<AccountResponseModel>();
+        foreach (var item in list)
+        {
+            if (!String.IsNullOrEmpty(item.FirstName))
+            {
+                responseList.Add(new AccountResponseModel
+                {
+                    id = item.Id,
+                    username = item.Username,
+                    first_name = item.FirstName,
+                    last_name = item.LastName == null ? "" : item.LastName
+                });
+            }
+        }
+        return responseList;
+    }
+
+    // get all approver who can approve requisition
+    async Task<IEnumerable<AccountResponseModel>> IAccountRepository.GetAllRequisitionApprover()
+    {
+        var list = await _context.Users.Where(i => i.CanApproveInventory).ToListAsync();
+        var responseList = new List<AccountResponseModel>();
+        foreach (var item in list)
+        {
+            if (!String.IsNullOrEmpty(item.FirstName))
+            {
+                responseList.Add(new AccountResponseModel
+                {
+                    id = item.Id,
+                    username = item.Username,
+                    first_name = item.FirstName,
+                    last_name = item.LastName == null ? "" : item.LastName
+                });
+            }
+        }
+        return responseList;
+    }
+
+    // get all distributor who can distribute requisition
+    async Task<IEnumerable<AccountResponseModel>> IAccountRepository.GetAllRequisitionDistributor()
+    {
+        var list = await _context.Users.Where(i => i.CanDistributeInventory).ToListAsync();
         var responseList = new List<AccountResponseModel>();
         foreach (var item in list)
         {

@@ -36,7 +36,7 @@ public class RequisitionController : ControllerBase
             var inventoryList = (List<ResponseModels.InventoryResponseModel>)await _inventory_repo.GetAllList();
             return Ok(new
             {
-                approver_list = await _account_util.GetAllResponseUser(),
+                approver_list = await _account_util.GetAllRequisitionApprover(),
                 inventory_list = inventoryList,
             });
         }
@@ -103,6 +103,34 @@ public class RequisitionController : ControllerBase
             {
                 requisition_list = list
             });
+        }
+        return NotFound();
+    }
+
+    [HttpGet, HttpPost]
+    [Route("api/inventory/requisition/approval")]
+    [Produces("application/json")]
+    [Consumes("application/json")]
+    public async Task<IActionResult> Approve()
+    {
+        var user = await _account_util.AuthorizeUser(Request);
+        if (user == null || !user.can_approve_inventory)
+        {
+            return Unauthorized();
+        }
+        if (Request.Method == "GET")
+        {
+            var requisitionList = (List<ResponseModels.RequisitionResponseModel>)await _requisition_repo.GetPendingApprovalList(user.id);
+            var distributorList = (List<ResponseModels.AccountResponseModel>)await _account_util.GetAllRequisitionDistributor();
+            return Ok(new
+            {
+                requisition_list = requisitionList,
+                distributor_list = distributorList
+            });
+        }
+        else if (Request.Method == "POST")
+        {
+            throw new NotImplementedException();
         }
         return NotFound();
     }

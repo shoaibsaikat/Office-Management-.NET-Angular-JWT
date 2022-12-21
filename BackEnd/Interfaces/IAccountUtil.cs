@@ -4,5 +4,7 @@ public interface IAccountUtil
 {
     public int? AuthorizeRequest(HttpRequest request);
     public Task<AccountResponseModel?> AuthorizeUser(HttpRequest request);
-    public Task<IEnumerable<AccountResponseModel>> GetAllResponseUser();
+    public Task<IEnumerable<AccountResponseModel>> GetAllUser();
+    public Task<IEnumerable<AccountResponseModel>> GetAllRequisitionApprover();
+    public Task<IEnumerable<AccountResponseModel>> GetAllRequisitionDistributor();
 }

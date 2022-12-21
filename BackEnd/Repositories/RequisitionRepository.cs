@@ -101,4 +101,41 @@ class RequisitionRepository : IRequisitionRepository
         }
         return responseList;
     }
+
+    async Task<IEnumerable<RequisitionResponseModel>> IRequisitionRepository.GetPendingApprovalList(int approverId)
+    {
+        var list = await _context.Requisitions
+                            .Include(i => i.User)
+                            .Include(i => i.Inventory)
+                            .Include(i => i.Approver)
+                            .Include(i => i.Distributor)
+                            .Where(i => i.ApproverId == approverId && (i.Approved == null || i.Approved == false))
+                            .OrderByDescending(i => i.Id)
+                            .ToListAsync();
+        // .Include() is a lazy loading, foreign tables are not by default included in query, rather they has to be explicitly loaded
+        var responseList = new List<RequisitionResponseModel>();
+        foreach (var item in list)
+        {
+            var model = new RequisitionResponseModel {
+                id = item.Id,
+                item_name = item.Inventory.Name,
+                title = item.Title,
+                date = item.RequestDate,
+                amount = item.Amount,
+                total = item.Inventory.Count,
+                unit = item.Inventory.Unit,
+                user_id = item.UserId,
+                user_name = item.User.FirstName + " " + item.User.LastName,
+                approver_id = item.ApproverId,
+                approver_name = item.Approver.FirstName + " " + item.Approver.LastName,
+                distributor_id = item.DistributorId,
+                distributor_name = item.Distributor?.FirstName + " " + item.Distributor?.LastName,
+                approved = item.Approved,
+                distributed = item.Distributed,
+                comment = item.Comment
+            };
+            responseList.Add(model);
+        }
+        return responseList;
+    }
 }
