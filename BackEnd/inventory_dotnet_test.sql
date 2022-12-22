@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 22, 2022 at 02:45 AM
+-- Generation Time: Dec 22, 2022 at 04:11 AM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.10
 
@@ -104,7 +104,7 @@ INSERT INTO `inventory` (`id`, `name`, `description`, `unit`, `count`, `last_mod
 (10, 'Stapler', '', 'piece', 30, '0001-01-01 00:00:00.000000'),
 (11, 'Punch machine (double punch)', '', 'piece', 20, '0001-01-01 00:00:00.000000'),
 (12, 'Punch machine (single punch)', '', 'piece', 35, '0001-01-01 00:00:00.000000'),
-(13, 'Paperweight', 'Glass paperweight', '40', 40, '0001-01-01 00:00:00.000000');
+(13, 'Paperweight', 'Glass paperweight', 'piece', 42, '0001-01-01 00:00:00.000000');
 
 -- --------------------------------------------------------
 

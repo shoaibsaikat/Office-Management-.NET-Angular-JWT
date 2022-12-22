@@ -10,3 +10,9 @@ Issues:
 
 Some helpful commands,
 1. 'npm install --save-dev @angular/cli@latest' to fix 'could not find module '@angular-devkit/build-angular' issue.
+
+
+
+Need to fix:
+1. Inventory quick edit success shows error msg in log
+2. pagination for inventory list added, add to others similarly

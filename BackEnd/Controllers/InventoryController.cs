@@ -21,12 +21,12 @@ public class InventoryController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetChartList()
     {
-        return Ok(await _inventory_repo.GetAllList());
+        return Ok(await _inventory_repo.GetAllList(null));
     }
 
-    [Route("api/inventory")]
+    [Route("api/inventory/{page:int?}")]
     [HttpGet]
-    public async Task<IActionResult> GetAllList()
+    public async Task<IActionResult> GetAllList(int? page)
     {
         var user = await _account_util.AuthorizeUser(Request);
         if (user == null || !(user.can_distribute_inventory || user.can_approve_inventory))
@@ -34,10 +34,11 @@ public class InventoryController : ControllerBase
             return Unauthorized();
         }
 
-        var list = (List<ResponseModels.InventoryResponseModel>)await _inventory_repo.GetAllList();
+        var list = (List<ResponseModels.InventoryResponseModel>)await _inventory_repo.GetAllList(page);
+        var count = await _inventory_repo.GetListCount();
         return Ok(new
         {
-            count = list.Count,
+            count = count,
             inventory_list = list,
         });
     }

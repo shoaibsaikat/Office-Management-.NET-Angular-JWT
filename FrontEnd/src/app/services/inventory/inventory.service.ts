@@ -29,7 +29,7 @@ export class InventoryService {
   constructor(private http: HttpClient) { }
 
   getInventoryList(page: number = 1): Observable<string> {
-    let listUrl = this.baseUrl.concat('?page=' + page);
+    let listUrl = this.baseUrl.concat(page + "");
     return this.http.get<string>(listUrl, this.common.getHttpHeader());
   }
 

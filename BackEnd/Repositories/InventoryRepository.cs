@@ -7,15 +7,29 @@ namespace _NET_Office_Management_BackEnd.Repositories;
 class InventoryRepository : IInventoryRepository
 {
     private readonly ApplicationDbContext _context;
+    private readonly ICommonUtil _common_util;
 
-    public InventoryRepository(ApplicationDbContext context)
+    public InventoryRepository(ApplicationDbContext context, ICommonUtil commonUtil)
     {
         _context = context;
+        _common_util = commonUtil;
     }
 
-    async Task<IEnumerable<InventoryResponseModel>> IInventoryRepository.GetAllList()
+    async Task<IEnumerable<InventoryResponseModel>> IInventoryRepository.GetAllList(int? page)
     {
-        var list = await _context.Inventories.ToListAsync();
+        List<Inventory> list;
+        if (page != null)
+        {
+            list = await _context.Inventories
+                    .Skip((page.Value - 1) * _common_util.GetPageSize())
+                    .Take(_common_util.GetPageSize())
+                    // .Where(i => i.Id >= page * _common_util.GetPageSize() - _common_util.GetPageSize() && i.Id <= page * _common_util.GetPageSize())
+                    .ToListAsync();
+        }
+        else
+        {
+            list = await _context.Inventories.ToListAsync();
+        }
         var responseList = new List<InventoryResponseModel>();
         foreach (var item in list)
         {
@@ -28,6 +42,11 @@ class InventoryRepository : IInventoryRepository
             responseList.Add(model);
         }
         return responseList;
+    }
+
+    async Task<int> IInventoryRepository.GetListCount()
+    {
+        return await _context.Inventories.CountAsync();
     }
 
     async Task<InventoryResponseModel?> IInventoryRepository.GetById(int id)

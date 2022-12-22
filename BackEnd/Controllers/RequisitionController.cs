@@ -33,7 +33,7 @@ public class RequisitionController : ControllerBase
 
         if (Request.Method == "GET")
         {
-            var inventoryList = (List<ResponseModels.InventoryResponseModel>)await _inventory_repo.GetAllList();
+            var inventoryList = (List<ResponseModels.InventoryResponseModel>)await _inventory_repo.GetAllList(null);
             return Ok(new
             {
                 approver_list = await _account_util.GetAllRequisitionApprover(),

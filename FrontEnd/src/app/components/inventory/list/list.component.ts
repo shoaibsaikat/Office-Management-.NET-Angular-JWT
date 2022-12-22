@@ -35,6 +35,7 @@ export class ListComponent implements OnInit {
     this.inventoryService.getInventoryList(this.currentPage).subscribe({
       next: (v) => {
         // console.log('ListComponent: ' + JSON.stringify(v));
+        this.inventoryList = [];
         let inventoryList: Inventory[] = JSON.parse(JSON.stringify(v)).inventory_list;
         this.listCount = JSON.parse(JSON.stringify(v)).count;
         this.totalPage = Math.ceil(this.listCount / Common.PAGE_SIZE);
@@ -48,11 +49,12 @@ export class ListComponent implements OnInit {
               count: element.count
             }
             this.inventoryList.push(inventory);
-            // console.log('AllListComponent: id:' + assetViewModel.id + ', user:' + element.user, ', status:' + assetViewModel.status);
+            // console.log('AllListComponent: id:' + inventory.id + ', count:' + inventory.count);
           }
         });
 
         // generate form groups
+        this.inventoryFormList = [];
         this.inventoryList.forEach(element => {
           this.inventoryFormList.push(new FormGroup({
             count: new FormControl(),
@@ -107,7 +109,7 @@ export class ListComponent implements OnInit {
   }
 
   hasNextPage(): boolean {
-    return !(this.currentPage * Common.PAGE_SIZE >= this.totalPage);
+    return !(this.currentPage >= this.totalPage);
   }
 
   hasPreviousPage(): boolean {

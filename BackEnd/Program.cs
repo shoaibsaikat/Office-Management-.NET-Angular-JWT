@@ -33,6 +33,9 @@ builder.Services.AddScoped<IRequisitionRepository, RequisitionRepository>();
 builder.Services.AddScoped<ITokenUtil, JWTTokenUtil>();
 builder.Services.AddScoped<IAccountUtil, AccountUtil>();
 
+// Util
+builder.Services.AddScoped<ICommonUtil, CommonUtil>();
+
 // CORS
 // var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 // builder.Services.AddCors(options =>

@@ -3,6 +3,8 @@ using _NET_Office_Management_BackEnd.ResponseModels;
 namespace _NET_Office_Management_BackEnd.Utils;
 class CommonUtil : ICommonUtil
 {
+    public int PAGE_SIZE = 10;
+
     /// <summary>
     /// Converts a Unix timestamp into a System.DateTime
     /// </summary>
@@ -12,5 +14,10 @@ class CommonUtil : ICommonUtil
     {
         DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
         return origin.AddSeconds(timestamp / 1000); // convert from milliseconds to seconds
+    }
+
+    int ICommonUtil.GetPageSize()
+    {
+        return PAGE_SIZE; // convert from milliseconds to seconds
     }
 }
