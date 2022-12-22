@@ -46,3 +46,6 @@ How to register new user:
     "password":"password",
     "super": false
 }
+
+3. Disable ssl verification in postman if needed.
+4. Set first name (first name is mandatory to show it in a list) and access permission from phpmyadmin.

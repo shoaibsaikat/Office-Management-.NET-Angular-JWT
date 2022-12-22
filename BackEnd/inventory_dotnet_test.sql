@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 05, 2022 at 06:54 AM
--- Server version: 10.4.22-MariaDB
--- PHP Version: 8.1.2
+-- Generation Time: Dec 22, 2022 at 02:45 AM
+-- Server version: 10.4.21-MariaDB
+-- PHP Version: 8.0.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -93,12 +93,18 @@ CREATE TABLE `inventory` (
 
 INSERT INTO `inventory` (`id`, `name`, `description`, `unit`, `count`, `last_modified_date`) VALUES
 (1, 'Facial Tissue Box', 'Facial tissue box', 'box', 55, '2022-03-20 12:45:06.000000'),
-(2, 'Toilet Tissue', 'Toilet tissue', 'unit', 100, '2022-03-20 12:45:23.000000'),
+(2, 'Toilet Tissue', 'Toilet tissue', 'unit', 97, '2022-03-20 12:45:23.000000'),
 (3, 'Pencil', 'Wood pencil', 'piece', 100, '2022-03-20 12:45:31.000000'),
-(4, 'Black Pen', 'Black ball point pen', 'piece', 300, '2022-03-20 12:45:38.000000'),
-(5, 'Glue', '', 'unit', 50, '0001-01-01 00:00:00.000000'),
+(4, 'Black Pen', 'Black ball point pen', 'piece', 155, '2022-03-20 12:45:38.000000'),
+(5, 'Glue', '', 'unit', 49, '0001-01-01 00:00:00.000000'),
 (6, 'Stapler Pin (large)', 'Stapler pin box of large size', 'box', 100, '0001-01-01 00:00:00.000000'),
-(7, 'Red pen', 'Red color pen', 'item', 33, '0001-01-01 00:00:00.000000');
+(7, 'Red pen', 'Red color pen', 'item', 33, '0001-01-01 00:00:00.000000'),
+(8, 'Cloth Duster', 'Cloth duster for cleaning work', 'piece', 40, '0001-01-01 00:00:00.000000'),
+(9, 'Handwash refill', 'Refill packet for handwash', 'packet', 80, '0001-01-01 00:00:00.000000'),
+(10, 'Stapler', '', 'piece', 30, '0001-01-01 00:00:00.000000'),
+(11, 'Punch machine (double punch)', '', 'piece', 20, '0001-01-01 00:00:00.000000'),
+(12, 'Punch machine (single punch)', '', 'piece', 35, '0001-01-01 00:00:00.000000'),
+(13, 'Paperweight', 'Glass paperweight', '40', 40, '0001-01-01 00:00:00.000000');
 
 -- --------------------------------------------------------
 
@@ -142,6 +148,14 @@ CREATE TABLE `requisition` (
   `request_date` datetime(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `requisition`
+--
+
+INSERT INTO `requisition` (`id`, `approved`, `title`, `amount`, `comment`, `approver_id`, `inventory_id`, `user_id`, `distributed`, `distributor_id`, `approve_date`, `distribution_date`, `request_date`) VALUES
+(1, NULL, 'A pencil needed', 1, 'Pencil is needed to make draft', 4, 3, 5, NULL, NULL, NULL, NULL, '2022-12-22 01:28:04.347216'),
+(2, 1, 'Glue needed', 1, 'Glue needed for stationary work', 4, 5, 4, 1, 6, NULL, '2022-12-22 07:37:29.263552', '2022-12-22 01:37:14.845981');
+
 -- --------------------------------------------------------
 
 --
@@ -171,8 +185,9 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_active`, `date_joined`, `supervisor_id`, `can_approve_inventory`, `can_distribute_inventory`, `can_approve_leave`, `can_manage_asset`) VALUES
-(4, '100000.gcd/tzgVo2bdtDi/wQh+fA==.xlKhxENKuXrLQTnXU3nH9gqYBKnx0g13npIfpNRzyOc=', NULL, 0, 'approver', 'Approver', NULL, NULL, 1, '2022-03-21 13:08:04.685672', NULL, 0, 0, 0, 0),
-(5, '100000.jPGjnsgpMQZTPmaCnUrHQw==.NIGEHX1cXunn2V2n9hKTxCpDTjeRb9vY3UNHncwzmzw=', NULL, 0, 'shoaib.rahman', 'Mina Shoaib', 'Rahman', 'shoaibsaikat@gmail.com', 1, '2022-03-21 13:31:32.868637', 5, 1, 1, 1, 1);
+(4, '100000.gcd/tzgVo2bdtDi/wQh+fA==.xlKhxENKuXrLQTnXU3nH9gqYBKnx0g13npIfpNRzyOc=', NULL, 0, 'approver', 'Approver', NULL, NULL, 1, '2022-03-21 13:08:04.685672', NULL, 1, 0, 0, 0),
+(5, '100000.jPGjnsgpMQZTPmaCnUrHQw==.NIGEHX1cXunn2V2n9hKTxCpDTjeRb9vY3UNHncwzmzw=', NULL, 0, 'shoaib.rahman', 'Mina Shoaib', 'Rahman', 'shoaibsaikat@gmail.com', 1, '2022-03-21 13:31:32.868637', 5, 0, 0, 1, 1),
+(6, '100000.xmocMvZiMdVzupx6r9dRPw==.xPJqx0q8mPCDnWDmrSYcETRFR4j1S+YnyVgLeVbmD6M=', NULL, 0, 'distributor', 'Distributor', NULL, NULL, 1, '2022-12-22 07:26:35.999722', NULL, 0, 1, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -274,7 +289,7 @@ ALTER TABLE `assethistory`
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `leave`
@@ -286,13 +301,13 @@ ALTER TABLE `leave`
 -- AUTO_INCREMENT for table `requisition`
 --
 ALTER TABLE `requisition`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables
