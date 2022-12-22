@@ -7,4 +7,5 @@ public interface ILeaveRepository
     public Task<IEnumerable<LeaveResponseModel>> GetLeaveListById(int userId);
     public Task<IEnumerable<LeaveResponseModel>> GetPendingApprovalList(int approverId);
     public Task<bool> ApproveLeave(int id);
+    public Task<IEnumerable<LeaveSummaryResponseModel>> GetLeaveSummary(int year);
 }

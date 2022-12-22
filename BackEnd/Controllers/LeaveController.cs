@@ -138,4 +138,27 @@ public class LeaveController : ControllerBase
         }
         return NotFound();
     }
+
+    [HttpGet]
+    [Route("api/leave/summary/{year:int}")]
+    [Produces("application/json")]
+    [Consumes("application/json")]
+    public async Task<IActionResult> GetYearSummary(int year)
+    {
+        var user = await _account_util.AuthorizeUser(Request);
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+        if (Request.Method == "GET")
+        {
+            var list = (List<ResponseModels.LeaveSummaryResponseModel>)await _leave_repo.GetLeaveSummary(year);
+            return Ok(new
+            {
+                leave_list = list,
+                count = list.Count
+            });
+        }
+        return NotFound();
+    }
 }

@@ -111,4 +111,34 @@ class LeaveRepository : ILeaveRepository
         }
         return false;
     }
+
+    async Task<IEnumerable<LeaveSummaryResponseModel>> ILeaveRepository.GetLeaveSummary(int year)
+    {
+        var responseList = new List<LeaveSummaryResponseModel>();
+        var leaveQuery = from l in _context.Leaves
+                    where l.StartDate.Year == year
+                    group l by l.UserId into g
+                    select new
+                    {
+                        days = g.Sum(i => i.DayCount),
+                        user = g.Key
+                    };
+        var userList = await _context.Users.ToListAsync();
+        foreach (var item in leaveQuery)
+        {
+            var user = userList.Where(i => i.Id == item.user).FirstOrDefault();
+            if (user != null)
+            {
+                var model = new LeaveSummaryResponseModel
+                {
+                    user = user.Id,
+                    first_name = user.FirstName,
+                    last_name = user.LastName,
+                    days = item.days
+                };
+                responseList.Add(model);
+            }
+        }
+        return responseList;
+    }
 }
