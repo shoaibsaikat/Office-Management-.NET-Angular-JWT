@@ -30,10 +30,9 @@ builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IAssetRepository, AssetRepository>();
 builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 builder.Services.AddScoped<IRequisitionRepository, RequisitionRepository>();
+builder.Services.AddScoped<ILeaveRepository, LeaveRepository>();
 builder.Services.AddScoped<ITokenUtil, JWTTokenUtil>();
 builder.Services.AddScoped<IAccountUtil, AccountUtil>();
-
-// Util
 builder.Services.AddScoped<ICommonUtil, CommonUtil>();
 
 // CORS

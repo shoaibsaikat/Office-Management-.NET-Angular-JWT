@@ -30,15 +30,20 @@ export class RequestInterceptor implements HttpInterceptor {
           // Operation failed; error is an HttpErrorResponse
           error: (error) => {
             // console.log('RequestInterceptor: ' + error.status);
+            let msg = JSON.parse(JSON.stringify(error.error));
+            this.messageService.clearError();
+
             if (error instanceof HttpErrorResponse && error.status != 401) {
-              let msg = JSON.parse(JSON.stringify(error.error));
-              this.messageService.clearError();
+              // console.log('RequestInterceptor: ' +  msg.detail);
               if (msg && msg.text && msg.text.length > 0 && error.status == 200) {
                 // success
                 this.messageService.add(msg.text);
               } else if (msg && msg.text && msg.text.length > 0) {
                 this.messageService.addError(msg.text);
                 // console.log('RequestInterceptor: ' +  msg);
+              } else if (msg && msg.detail && msg.detail.length > 0) {
+                  // backend user msg
+                  this.messageService.addError(msg.detail);
               } else {
                 // system error
                 this.messageService.addError(error.status + ': ' + error.name);
@@ -48,6 +53,11 @@ export class RequestInterceptor implements HttpInterceptor {
               // we're not getting new access token after expire,
               // if we want to implement getting new access token then it should be implemented using some timer
               // TODO: for some api calls maybe we would not need to logout the user
+              if (msg && msg.detail && msg.detail.length > 0) {
+                // backend user msg
+                console.log(msg.detail);
+                this.messageService.addError(msg.detail);
+              }
               this.globalService.logOut();
             }
           }, finalize: () => {

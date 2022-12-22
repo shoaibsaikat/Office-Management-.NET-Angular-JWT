@@ -113,7 +113,7 @@ export class GlobalService {
 
   logOut(): void {
     this.unsubscribeAccessToken();
-    this.messageService.clearAll();
+    // this.messageService.clearAll();
     this.saveEmptyUser();
     this.navigate('');
   }

@@ -51,7 +51,10 @@ public class AccountController : ControllerBase
             var token = await _account_repo.Login(username, password);
             if (String.IsNullOrEmpty(token))
             {
-                return Unauthorized();
+                return Unauthorized(new
+                {
+                    detail = "Invalid Login credential"
+                });
             }
             return Ok(new
             {
