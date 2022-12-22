@@ -92,4 +92,50 @@ public class LeaveController : ControllerBase
         }
         return NotFound();
     }
+    
+    [HttpGet]
+    [Route("api/leave/request_list")]
+    [Produces("application/json")]
+    [Consumes("application/json")]
+    public async Task<IActionResult> GetLeaveRequestList()
+    {
+        var user = await _account_util.AuthorizeUser(Request);
+        if (user == null || !user.can_approve_leave)
+        {
+            return Unauthorized();
+        }
+        if (Request.Method == "GET")
+        {
+            var leaveList = (List<ResponseModels.LeaveResponseModel>)await _leave_repo.GetPendingApprovalList(user.id);
+            return Ok(new
+            {
+                leave_list = leaveList,
+                count = leaveList.Count
+            });
+        }
+        return NotFound();
+    }
+
+    
+    [HttpPost]
+    [Route("api/leave/approve/{id:int}")]
+    [Produces("application/json")]
+    [Consumes("application/json")]
+    public async Task<IActionResult> Approve(int id)
+    {
+        var user = await _account_util.AuthorizeUser(Request);
+        if (user == null || !user.can_approve_leave)
+        {
+            return Unauthorized();
+        }
+        if (Request.Method == "POST")
+        {
+            if (await _leave_repo.ApproveLeave(id))
+            {
+                return Ok("Leave approved.");
+            }
+            return NotFound("Leave approval failed.");
+        }
+        return NotFound();
+    }
 }

@@ -146,6 +146,7 @@ class RequisitionRepository : IRequisitionRepository
         if (requisition != null && disributor != null)
         {
             requisition.Approved = true;
+            requisition.ApproveDate = DateTime.UtcNow;
             requisition.DistributorId = distributorId;
             await _context.SaveChangesAsync();
             return true;
@@ -196,7 +197,7 @@ class RequisitionRepository : IRequisitionRepository
         if (requisition != null && requisition.Inventory.Count >= requisition.Amount)
         {
             requisition.Distributed = true;
-            requisition.DistributionDate = DateTime.Now;
+            requisition.DistributionDate = DateTime.UtcNow;
             requisition.Inventory.Count = requisition.Inventory.Count - requisition.Amount;
             await _context.SaveChangesAsync();
             return true;

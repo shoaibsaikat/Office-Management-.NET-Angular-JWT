@@ -26,6 +26,7 @@ class LeaveRepository : ILeaveRepository
                 EndDate = end,
                 DayCount = days,
                 Comment = comment,
+                CreationDate = DateTime.UtcNow
             };
             await _context.Leaves.AddAsync(leave);
             await _context.SaveChangesAsync();
@@ -64,5 +65,50 @@ class LeaveRepository : ILeaveRepository
             responseList.Add(model);
         }
         return responseList;
+    }
+
+    async Task<IEnumerable<LeaveResponseModel>> ILeaveRepository.GetPendingApprovalList(int approverId)
+    {
+        var list = await _context.Leaves
+                            .Where(i => i.ApproverId == approverId && i.Approved == false)
+                            .Include(i => i.User)
+                            .OrderByDescending(i => i.Id)
+                            .ToListAsync();
+        // .Include() is a lazy loading, foreign tables are not by default included in query, rather they has to be explicitly loaded
+        var responseList = new List<LeaveResponseModel>();
+        foreach (var item in list)
+        {
+            var model = new LeaveResponseModel
+            {
+                id = item.Id,
+                title = item.Title,
+                start_date = item.StartDate,
+                end_date = item.EndDate,
+                day_count = item.DayCount,
+                user = item.UserId,
+                user_first_name = item.User.FirstName,
+                user_last_name = item.User.LastName,
+                approver = item.ApproverId,
+                approved = item.Approved,
+                comment = item.Comment,
+                creation_date = item.CreationDate,
+                approve_date = item.ApproveDate
+            };
+            responseList.Add(model);
+        }
+        return responseList;
+    }
+
+    async Task<bool> ILeaveRepository.ApproveLeave(int id)
+    {
+        var leave = await _context.Leaves.FirstOrDefaultAsync(i => i.Id == id);
+        if (leave != null)
+        {
+            leave.Approved = true;
+            leave.ApproveDate = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        return false;
     }
 }

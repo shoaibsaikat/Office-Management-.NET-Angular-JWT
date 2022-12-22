@@ -53,8 +53,8 @@ export class RequestListComponent implements OnInit {
   onApprove(index: number): void {
     // console.log('RequestListComponent: index: ' + index + ': ' + this.leaveList[index].title);
     this.leaveService.approveLeave(this.leaveList[index].id).subscribe(data => {
-      let msg = JSON.parse(JSON.stringify(data));
-      this.messageService.add(msg.text);
+      // let msg = JSON.parse(JSON.stringify(data));
+      // this.messageService.add(msg.text);
       // update local data
       this.leaveList.splice(index, 1);
     });

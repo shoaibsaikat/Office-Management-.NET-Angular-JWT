@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 22, 2022 at 04:11 AM
+-- Generation Time: Dec 22, 2022 at 08:01 AM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.10
 
@@ -126,6 +126,14 @@ CREATE TABLE `leave` (
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `leave`
+--
+
+INSERT INTO `leave` (`id`, `title`, `creation_date`, `approved`, `approve_date`, `start_date`, `end_date`, `day_count`, `comment`, `approver_id`, `user_id`) VALUES
+(2, 'A one-day leave needed', '0001-01-01 00:00:00.000000', 1, '2022-12-22 06:59:33.151367', '2022-12-22 00:00:00.000000', '2022-12-22 00:00:00.000000', 1, 'A one-day leave needed due to sickness.', 7, 5),
+(3, 'Two days leave needed', '0001-01-01 00:00:00.000000', 0, NULL, '2023-01-25 00:00:00.000000', '2023-01-26 00:00:00.000000', 2, '2 days leave needed due to family visit in next year.', 7, 5);
+
 -- --------------------------------------------------------
 
 --
@@ -154,7 +162,8 @@ CREATE TABLE `requisition` (
 
 INSERT INTO `requisition` (`id`, `approved`, `title`, `amount`, `comment`, `approver_id`, `inventory_id`, `user_id`, `distributed`, `distributor_id`, `approve_date`, `distribution_date`, `request_date`) VALUES
 (1, NULL, 'A pencil needed', 1, 'Pencil is needed to make draft', 4, 3, 5, NULL, NULL, NULL, NULL, '2022-12-22 01:28:04.347216'),
-(2, 1, 'Glue needed', 1, 'Glue needed for stationary work', 4, 5, 4, 1, 6, NULL, '2022-12-22 07:37:29.263552', '2022-12-22 01:37:14.845981');
+(2, 1, 'Glue needed', 1, 'Glue needed for stationary work', 4, 5, 4, 1, 6, NULL, '2022-12-22 07:37:29.263552', '2022-12-22 01:37:14.845981'),
+(3, NULL, 'One tissue paper needed', 1, '', 4, 1, 5, NULL, NULL, NULL, NULL, '2022-12-22 05:32:57.641430');
 
 -- --------------------------------------------------------
 
@@ -186,8 +195,9 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_active`, `date_joined`, `supervisor_id`, `can_approve_inventory`, `can_distribute_inventory`, `can_approve_leave`, `can_manage_asset`) VALUES
 (4, '100000.gcd/tzgVo2bdtDi/wQh+fA==.xlKhxENKuXrLQTnXU3nH9gqYBKnx0g13npIfpNRzyOc=', NULL, 0, 'approver', 'Approver', NULL, NULL, 1, '2022-03-21 13:08:04.685672', NULL, 1, 0, 0, 0),
-(5, '100000.jPGjnsgpMQZTPmaCnUrHQw==.NIGEHX1cXunn2V2n9hKTxCpDTjeRb9vY3UNHncwzmzw=', NULL, 0, 'shoaib.rahman', 'Mina Shoaib', 'Rahman', 'shoaibsaikat@gmail.com', 1, '2022-03-21 13:31:32.868637', 5, 0, 0, 1, 1),
-(6, '100000.xmocMvZiMdVzupx6r9dRPw==.xPJqx0q8mPCDnWDmrSYcETRFR4j1S+YnyVgLeVbmD6M=', NULL, 0, 'distributor', 'Distributor', NULL, NULL, 1, '2022-12-22 07:26:35.999722', NULL, 0, 1, 0, 0);
+(5, '100000.jPGjnsgpMQZTPmaCnUrHQw==.NIGEHX1cXunn2V2n9hKTxCpDTjeRb9vY3UNHncwzmzw=', NULL, 0, 'shoaib.rahman', 'Mina Shoaib', 'Rahman', 'shoaibsaikat@gmail.com', 1, '2022-03-21 13:31:32.868637', 7, 0, 0, 1, 1),
+(6, '100000.xmocMvZiMdVzupx6r9dRPw==.xPJqx0q8mPCDnWDmrSYcETRFR4j1S+YnyVgLeVbmD6M=', NULL, 0, 'distributor', 'Distributor', NULL, NULL, 1, '2022-12-22 07:26:35.999722', NULL, 0, 1, 0, 0),
+(7, '100000.quwqWcaFAzk3Wq1sV+L7cw==.LrOoDUK6tuf2zoe8R1mfeJZixekM34DO9cjJiTE2lyk=', NULL, 0, 'manager', 'Manager', 'Office', 'abcd@abcd.com', 1, '2022-12-22 09:42:56.834157', 7, 0, 0, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -295,19 +305,19 @@ ALTER TABLE `inventory`
 -- AUTO_INCREMENT for table `leave`
 --
 ALTER TABLE `leave`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `requisition`
 --
 ALTER TABLE `requisition`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables

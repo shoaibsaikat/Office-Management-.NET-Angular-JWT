@@ -72,6 +72,7 @@ class InventoryRepository : IInventoryRepository
         if (item != null)
         {
             item.Count = amount;
+            item.LastModifiedDate = DateTime.UtcNow;
             await _context.SaveChangesAsync();
             return true;
         }
@@ -85,7 +86,8 @@ class InventoryRepository : IInventoryRepository
             Name = name,
             Count = count,
             Unit = unit,
-            Description = description
+            Description = description,
+            LastModifiedDate = DateTime.UtcNow
         };
         await _context.Inventories.AddAsync(inventory);        
         await _context.SaveChangesAsync();
