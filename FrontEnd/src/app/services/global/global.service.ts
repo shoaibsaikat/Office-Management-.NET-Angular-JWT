@@ -90,8 +90,8 @@ export class GlobalService {
   setCurrentUser(user: User): void {
     this.user.id = user.id;
     this.user.username = user.username;
-    this.user.first_name = user.first_name;
-    this.user.last_name = user.last_name;
+    this.user.first_name = user.first_name == null ? 'Set First Name' : user.first_name;
+    this.user.last_name = user.last_name == null ? '' : user.last_name;
     this.user.email = user.email;
     this.user.manager_id = user.manager_id;
     this.user.refresh_token = user.refresh_token;
