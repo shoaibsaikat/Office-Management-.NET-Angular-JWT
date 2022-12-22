@@ -5,7 +5,7 @@ namespace _NET_Office_Management_BackEnd.Models
 {
     public partial class Leave
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; } = null!;
         public DateTime CreationDate { get; set; }
         public bool Approved { get; set; }

@@ -40,26 +40,56 @@ public class LeaveController : ControllerBase
             }
             return Ok();
         }
-        // else if (Request.Method == "POST")
-        // {
-        //     using (var reader = new StreamReader(Request.Body))
-        //     {
-        //         var body = await reader.ReadToEndAsync();
-        //         var bodyJson = JObject.Parse(body);
-        //         var title = bodyJson.GetValue("title")?.ToString();
-        //         var amount = Convert.ToUInt32(bodyJson.GetValue("amount")?.ToString());
-        //         var inventory = Convert.ToInt32(bodyJson.GetValue("inventory")?.ToString());
-        //         var approver = Convert.ToInt32(bodyJson.GetValue("approver")?.ToString());
-        //         var comment = bodyJson.GetValue("comment")?.ToString();
+        else if (Request.Method == "POST")
+        {
+            using (var reader = new StreamReader(Request.Body))
+            {
+                var body = await reader.ReadToEndAsync();
+                var bodyJson = JObject.Parse(body);
+                var title = bodyJson.GetValue("title")?.ToString();
+                var start = Convert.ToDateTime(bodyJson.GetValue("start")?.ToString());
+                var end = Convert.ToDateTime(bodyJson.GetValue("end")?.ToString());
+                var days = Convert.ToUInt32(bodyJson.GetValue("days")?.ToString());
+                var comment = bodyJson.GetValue("comment")?.ToString();
 
-        //         if (!String.IsNullOrEmpty(title) && amount > 0 && inventory > 0 && approver > 0)
-        //         {
-        //             await _requisition_repo.Create(user.id, title, inventory, approver, amount, comment);
-        //             return Ok("Requisition created");
-        //         }
-        //     }
-        // }
+                if (!String.IsNullOrEmpty(title) && days > 0 && comment != null)
+                {
+                    if (await _leave_repo.Create(user, title, start, end, days, comment))
+                    {
+                        return Ok(new
+                        {
+                            detail = "Leave created."
+                        });
+                    }
+                }
+            }
+        }
+        return NotFound(new
+        {
+            detail = "Leave creation failed."
+        });
+    }
 
+    [HttpGet]
+    [Route("api/leave/my_list")]
+    [Produces("application/json")]
+    [Consumes("application/json")]
+    public async Task<IActionResult> GetMyList()
+    {
+        var user = await _account_util.AuthorizeUser(Request);
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+        if (Request.Method == "GET")
+        {
+            var list = (List<ResponseModels.LeaveResponseModel>)await _leave_repo.GetLeaveListById(user.id);
+            return Ok(new
+            {
+                leave_list = list,
+                count = list.Count
+            });
+        }
         return NotFound();
     }
 }

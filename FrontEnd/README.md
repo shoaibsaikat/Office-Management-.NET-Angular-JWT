@@ -16,3 +16,4 @@ Some helpful commands,
 Need to fix:
 1. Inventory quick edit success shows error msg in log
 2. pagination for inventory list added, add to others similarly
+3. Read OK response msg properly

@@ -44,6 +44,10 @@ export class RequestInterceptor implements HttpInterceptor {
               } else if (msg && msg.detail && msg.detail.length > 0) {
                   // backend user msg
                   this.messageService.addError(msg.detail);
+              } else if (error.statusText.toLowerCase() == 'ok') {
+                // success
+                // console.log(JSON.stringify(error));
+                // this.messageService.add(error.statusText);
               } else {
                 // system error
                 this.messageService.addError(error.status + ': ' + error.name);
@@ -55,7 +59,7 @@ export class RequestInterceptor implements HttpInterceptor {
               // TODO: for some api calls maybe we would not need to logout the user
               if (msg && msg.detail && msg.detail.length > 0) {
                 // backend user msg
-                console.log(msg.detail);
+                // console.log(msg.detail);
                 this.messageService.addError(msg.detail);
               }
               this.globalService.logOut();

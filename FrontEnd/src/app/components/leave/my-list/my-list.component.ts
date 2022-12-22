@@ -31,7 +31,7 @@ export class MyListComponent implements OnInit {
     this.leaveService.getMyLeaveList(this.currentPage).subscribe({
       next: (v) => {
         // console.log('MyListComponent: ' + JSON.stringify(v));
-        let leaveList: Leave[] = JSON.parse(JSON.parse(JSON.stringify(v)).leave_list);
+        let leaveList: Leave[] = JSON.parse(JSON.stringify(v)).leave_list;
         this.listCount = JSON.parse(JSON.stringify(v)).count;
         this.totalPage = Math.ceil(this.listCount / Common.PAGE_SIZE);
 

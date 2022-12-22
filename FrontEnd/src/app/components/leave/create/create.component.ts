@@ -42,7 +42,8 @@ export class CreateComponent implements OnInit {
     let end = new Date(this.end?.value);
     if (start && end &&
       start <= end &&
-      (start.getMonth() > current.getMonth() || (start.getMonth() == current.getMonth() && start.getDate() >= current.getDate()))) {
+      ((start.getFullYear() > current.getFullYear() || start.getMonth() > current.getMonth()) ||
+       (start.getMonth() == current.getMonth() && start.getDate() >= current.getDate()))) {
       this.days = this.getDays();
       return false;
     }
@@ -66,8 +67,8 @@ export class CreateComponent implements OnInit {
       comment: this.comment?.value,
     }
     this.leaveService.createLeave(leave).subscribe(data => {
-      let msg = JSON.parse(JSON.stringify(data));
-      this.messageService.add(msg.text);
+      // let msg = JSON.parse(JSON.stringify(data));
+      // this.messageService.add(msg.detail);
       this.globalService.navigate('/leave/my_list');
     });
 
