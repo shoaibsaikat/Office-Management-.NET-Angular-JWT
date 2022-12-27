@@ -7,10 +7,12 @@ namespace _NET_Office_Management_BackEnd.Repositories;
 class LeaveRepository : ILeaveRepository
 {
     private readonly ApplicationDbContext _context;
+    private readonly ICommonUtil _common_util;
 
-    public LeaveRepository(ApplicationDbContext context)
+    public LeaveRepository(ApplicationDbContext context, ICommonUtil commonUtil)
     {
         _context = context;
+        _common_util = commonUtil;
     }
 
     async Task<Boolean> ILeaveRepository.Create(AccountResponseModel user, string title, DateTime start, DateTime end, UInt32 days, string comment)
@@ -36,13 +38,32 @@ class LeaveRepository : ILeaveRepository
         return false;
     }
 
-    async Task<IEnumerable<LeaveResponseModel>> ILeaveRepository.GetLeaveListById(int userId)
+    async Task<int> ILeaveRepository.GetListCountById(int userId)
     {
-        var list = await _context.Leaves
-                            .Include(i => i.User)
-                            .Where(i => i.UserId == userId)
-                            .ToListAsync();
-        // .Include() is a lazy loading, foreign tables are not by default included in query, rather they has to be explicitly loaded
+        return await _context.Leaves.Where(i => i.UserId == userId).CountAsync();
+    }
+
+    async Task<IEnumerable<LeaveResponseModel>> ILeaveRepository.GetLeaveListById(int userId, int? page)
+    {        
+        List<Leave> list;
+        if (page != null)
+        {
+            list = await _context.Leaves
+                                    .Include(i => i.User)
+                                    .Where(i => i.UserId == userId)
+                                    .OrderByDescending(i => i.Id)
+                                    .Skip((page.Value - 1) * _common_util.GetPageSize())
+                                    .Take(_common_util.GetPageSize())
+                                    .ToListAsync();
+        }
+        else
+        {
+            // .Include() is a lazy loading, foreign tables are not by default included in query, rather they has to be explicitly loaded
+            list = await _context.Leaves
+                                    .Include(i => i.User)
+                                    .Where(i => i.UserId == userId)
+                                    .ToListAsync();
+        }
         var responseList = new List<LeaveResponseModel>();
         foreach (var item in list)
         {
@@ -67,13 +88,32 @@ class LeaveRepository : ILeaveRepository
         return responseList;
     }
 
-    async Task<IEnumerable<LeaveResponseModel>> ILeaveRepository.GetPendingApprovalList(int approverId)
+    async Task<int> ILeaveRepository.GetPendingApprovalListCount(int approverId)
     {
-        var list = await _context.Leaves
+        return await _context.Leaves.Where(i => i.ApproverId == approverId && i.Approved == false).CountAsync();
+    }
+
+    async Task<IEnumerable<LeaveResponseModel>> ILeaveRepository.GetPendingApprovalList(int approverId, int? page)
+    {
+        List<Leave> list;
+        if (page != null)
+        {
+            list = await _context.Leaves
+                                    .Where(i => i.ApproverId == approverId && i.Approved == false)
+                                    .Include(i => i.User)
+                                    .OrderByDescending(i => i.Id)
+                                    .Skip((page.Value - 1) * _common_util.GetPageSize())
+                                    .Take(_common_util.GetPageSize())
+                                    .ToListAsync();
+        }
+        else
+        {
+            list = await _context.Leaves
                             .Where(i => i.ApproverId == approverId && i.Approved == false)
                             .Include(i => i.User)
                             .OrderByDescending(i => i.Id)
                             .ToListAsync();
+        }
         // .Include() is a lazy loading, foreign tables are not by default included in query, rather they has to be explicitly loaded
         var responseList = new List<LeaveResponseModel>();
         foreach (var item in list)
@@ -116,7 +156,7 @@ class LeaveRepository : ILeaveRepository
     {
         var responseList = new List<LeaveSummaryResponseModel>();
         var leaveQuery = from l in _context.Leaves
-                    where l.StartDate.Year == year
+                    where l.StartDate.Year == year && l.Approved == true
                     group l by l.UserId into g
                     select new
                     {

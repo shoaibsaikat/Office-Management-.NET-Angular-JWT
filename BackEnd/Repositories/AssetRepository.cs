@@ -7,6 +7,7 @@ namespace _NET_Office_Management_BackEnd.Repositories;
 class AssetRepository : IAssetRepository
 {
     private readonly ApplicationDbContext _context;
+    private readonly ICommonUtil _common_util;
     private readonly IDictionary<int, string> _STATUS_CHOICE = new Dictionary<int, string>()
     {
         {0, "Working"},
@@ -21,9 +22,10 @@ class AssetRepository : IAssetRepository
         {3, "Printer"},
     };
 
-    public AssetRepository(ApplicationDbContext context)
+    public AssetRepository(ApplicationDbContext context, ICommonUtil commonUtil)
     {
         _context = context;
+        _common_util = commonUtil;
     }
 
     IDictionary<int, string> IAssetRepository.GetStatus()
@@ -36,12 +38,30 @@ class AssetRepository : IAssetRepository
         return _TYPE_CHOICE;
     }
 
-    async Task<IEnumerable<AssetResponseModel>> IAssetRepository.GetAllList()
+    async Task<int> IAssetRepository.GetListCount()
+    {
+        return await _context.Assets.CountAsync();
+    }
+
+    async Task<IEnumerable<AssetResponseModel>> IAssetRepository.GetAllList(int? page)
     {
         var assetList = new List<AssetResponseModel>();
-        // eager loading
-        // without eager loading we'll get null in item.User.FirstName
-        var list = await _context.Assets.Include(i => i.User).ToListAsync();
+        List<Asset> list;
+        if (page != null)
+        {
+            list = await _context.Assets
+                                    .Include(i => i.User)
+                                    .Skip((page.Value - 1) * _common_util.GetPageSize())
+                                    .Take(_common_util.GetPageSize())
+                                    .ToListAsync();
+        }
+        else
+        {
+            // eager loading
+            // without eager loading we'll get null in item.User.FirstName
+            list = await _context.Assets.Include(i => i.User).ToListAsync();
+        }
+
         foreach (var item in list)
         {
             assetList.Add(new AssetResponseModel
@@ -64,12 +84,30 @@ class AssetRepository : IAssetRepository
         return assetList;
     }
 
-    async Task<IEnumerable<AssetResponseModel>> IAssetRepository.GetMyList(int id)
+    async Task<int> IAssetRepository.GetMyListCount(int id)
+    {
+        return await _context.Assets.Where(i => i.UserId == id).CountAsync();
+    }
+
+    async Task<IEnumerable<AssetResponseModel>> IAssetRepository.GetMyList(int id, int? page)
     {
         var assetList = new List<AssetResponseModel>();
-        // eager loading
-        // without eager loading we'll get null in item.User.FirstName
-        var list = await _context.Assets.Include(u => u.User).Where(i => i.UserId == id).ToListAsync();
+        List<Asset> list;
+        if (page != null)
+        {
+            list = await _context.Assets
+                                    .Include(i => i.User)
+                                    .Where(i => i.UserId == id)
+                                    .Skip((page.Value - 1) * _common_util.GetPageSize())
+                                    .Take(_common_util.GetPageSize())
+                                    .ToListAsync();
+        }
+        else
+        {
+            // eager loading
+            // without eager loading we'll get null in item.User.FirstName
+            list = await _context.Assets.Include(u => u.User).Where(i => i.UserId == id).ToListAsync();
+        }
         foreach (var item in list)
         {
             assetList.Add(new AssetResponseModel
@@ -90,12 +128,31 @@ class AssetRepository : IAssetRepository
         return assetList;
     }
 
-    async Task<IEnumerable<AssetResponseModel>> IAssetRepository.GetMyPendingList(int id)
+    async Task<int> IAssetRepository.GetMyPendingListCount(int id)
+    {
+        return await _context.Assets.Where(i => i.NextUserId == id).CountAsync();
+    }
+
+    async Task<IEnumerable<AssetResponseModel>> IAssetRepository.GetMyPendingList(int id, int? page)
     {
         var assetList = new List<AssetResponseModel>();
-        // eager loading
-        // without eager loading we'll get null in item.User.FirstName
-        var list = await _context.Assets.Include(u => u.User).Where(i => i.NextUserId == id).ToListAsync();
+        List<Asset> list;
+
+        if (page != null)
+        {
+            list = await _context.Assets
+                                    .Include(i => i.User)
+                                    .Where(i => i.NextUserId == id)
+                                    .Skip((page.Value - 1) * _common_util.GetPageSize())
+                                    .Take(_common_util.GetPageSize())
+                                    .ToListAsync();
+        }
+        else
+        {
+            // eager loading
+            // without eager loading we'll get null in item.User.FirstName
+            list = await _context.Assets.Include(u => u.User).Where(i => i.NextUserId == id).ToListAsync();
+        }
         foreach (var item in list)
         {
             assetList.Add(new AssetResponseModel

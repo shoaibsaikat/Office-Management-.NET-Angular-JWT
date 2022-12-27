@@ -9,12 +9,14 @@ public class LeaveController : ControllerBase
     private readonly ILogger<InventoryController> _logger;
     private readonly ILeaveRepository _leave_repo;
     private readonly IAccountUtil _account_util;
+    private readonly ICommonUtil _common_util;
 
-    public LeaveController(ILogger<InventoryController> logger, IAccountUtil accountUtil, ILeaveRepository leaveRepo)
+    public LeaveController(ILogger<InventoryController> logger, IAccountUtil accountUtil, ILeaveRepository leaveRepo, ICommonUtil commonUtil)
     {
         _logger = logger;
         _account_util = accountUtil;
         _leave_repo = leaveRepo;
+        _common_util = commonUtil;
     }
 
     [HttpGet, HttpPost]
@@ -71,10 +73,10 @@ public class LeaveController : ControllerBase
     }
 
     [HttpGet]
-    [Route("api/leave/my_list")]
+    [Route("api/leave/my_list/{page:int?}")]
     [Produces("application/json")]
     [Consumes("application/json")]
-    public async Task<IActionResult> GetMyList()
+    public async Task<IActionResult> GetMyList(int? page)
     {
         var user = await _account_util.AuthorizeUser(Request);
         if (user == null)
@@ -83,21 +85,22 @@ public class LeaveController : ControllerBase
         }
         if (Request.Method == "GET")
         {
-            var list = (List<ResponseModels.LeaveResponseModel>)await _leave_repo.GetLeaveListById(user.id);
+            var list = (List<ResponseModels.LeaveResponseModel>)await _leave_repo.GetLeaveListById(user.id, page);
+            var count = await _leave_repo.GetListCountById(user.id);
             return Ok(new
             {
                 leave_list = list,
-                count = list.Count
+                count = count
             });
         }
         return NotFound();
     }
     
     [HttpGet]
-    [Route("api/leave/request_list")]
+    [Route("api/leave/request_list/{page:int?}")]
     [Produces("application/json")]
     [Consumes("application/json")]
-    public async Task<IActionResult> GetLeaveRequestList()
+    public async Task<IActionResult> GetLeaveRequestList(int? page)
     {
         var user = await _account_util.AuthorizeUser(Request);
         if (user == null || !user.can_approve_leave)
@@ -106,11 +109,12 @@ public class LeaveController : ControllerBase
         }
         if (Request.Method == "GET")
         {
-            var leaveList = (List<ResponseModels.LeaveResponseModel>)await _leave_repo.GetPendingApprovalList(user.id);
+            var leaveList = (List<ResponseModels.LeaveResponseModel>)await _leave_repo.GetPendingApprovalList(user.id, page);
+            var count = await _leave_repo.GetPendingApprovalListCount(user.id);
             return Ok(new
             {
                 leave_list = leaveList,
-                count = leaveList.Count
+                count = count
             });
         }
         return NotFound();
@@ -140,10 +144,10 @@ public class LeaveController : ControllerBase
     }
 
     [HttpGet]
-    [Route("api/leave/summary/{year:int}")]
+    [Route("api/leave/summary/{year:int}/{page:int?}")]
     [Produces("application/json")]
     [Consumes("application/json")]
-    public async Task<IActionResult> GetYearSummary(int year)
+    public async Task<IActionResult> GetYearSummary(int year, int? page)
     {
         var user = await _account_util.AuthorizeUser(Request);
         if (user == null)
@@ -152,11 +156,22 @@ public class LeaveController : ControllerBase
         }
         if (Request.Method == "GET")
         {
+            List<ResponseModels.LeaveSummaryResponseModel> outputList;
             var list = (List<ResponseModels.LeaveSummaryResponseModel>)await _leave_repo.GetLeaveSummary(year);
+            if (page != null)
+            {
+                var start = (page.Value - 1) * _common_util.GetPageSize();
+                var count = start + _common_util.GetPageSize() > list.Count ? list.Count : _common_util.GetPageSize();
+                outputList = list.GetRange(start, count);
+            }
+            else
+            {
+                outputList = list;
+            }
             return Ok(new
             {
-                leave_list = list,
-                count = list.Count
+                leave_list = outputList,
+                count = outputList.Count
             });
         }
         return NotFound();

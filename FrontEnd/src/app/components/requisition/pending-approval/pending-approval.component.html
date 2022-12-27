@@ -28,13 +28,13 @@
                         <td>{{item.date|date}}</td>
                         <td>
                             <form class="row" [formGroup]="requisitionFormList[i]" (ngSubmit)="onApproveClick(i)">
-                                <div class="col-md-8">
+                                <div class="col-md-6">
                                     <select class="form-select" formControlName="distributor">
                                         <option value="" disabled>Choose distributor</option>
                                         <option *ngFor="let user of distributorList" [ngValue]="user.id">{{user.first_name}} {{user.last_name}}</option>
                                     </select>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <button type="submit" class="btn btn-cyan" [disabled]="!isDistributorSelected(i)">Approve</button>
                                 </div>
                             </form>

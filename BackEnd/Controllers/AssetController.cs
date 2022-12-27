@@ -22,7 +22,7 @@ public class AssetController : ControllerBase
     [Route("api/asset/list/{page:int?}")]
     [Produces("application/json")]
     [Consumes("application/json")]
-    public async Task<IActionResult> GetAllList()
+    public async Task<IActionResult> GetAllList(int? page)
     {
         var user = await _account_util.AuthorizeUser(Request);
         if (user == null || !user.can_manage_asset)
@@ -30,13 +30,14 @@ public class AssetController : ControllerBase
             return Unauthorized();
         }
 
-        var list = (List<ResponseModels.AssetResponseModel>)await _asset_repo.GetAllList();
+        var list = (List<ResponseModels.AssetResponseModel>)await _asset_repo.GetAllList(page);
+        var count = await _asset_repo.GetListCount();
         return Ok(new
         {
             status = _asset_repo.GetStatus(),
             type = _asset_repo.GetType(),
-            count = list.Count,
             asset_list = list,
+            count = count
         });
     }
 
@@ -44,7 +45,7 @@ public class AssetController : ControllerBase
     [Route("api/asset/my_list/{page:int?}")]
     [Produces("application/json")]
     [Consumes("application/json")]
-    public async Task<IActionResult> GetMyList()
+    public async Task<IActionResult> GetMyList(int? page)
     {
         var userId = _account_util.AuthorizeRequest(Request);
         if (userId == null)
@@ -54,12 +55,13 @@ public class AssetController : ControllerBase
 
         if (Request.Method == "GET")
         {
-            var list = (List<ResponseModels.AssetResponseModel>)await _asset_repo.GetMyList(userId.Value);
+            var list = (List<ResponseModels.AssetResponseModel>)await _asset_repo.GetMyList(userId.Value, page);
+            var count = await _asset_repo.GetMyListCount(userId.Value);
             return Ok(new
             {
                 asset_list = list,
                 user_list = await _account_util.GetAllUser(),
-                count = list.Count,
+                count = count,
             });
         }
         else if (Request.Method == "POST")
@@ -84,7 +86,7 @@ public class AssetController : ControllerBase
     [Route("api/asset/my_pending_list/{page:int?}")]
     [Produces("application/json")]
     [Consumes("application/json")]
-    public async Task<IActionResult> GetMyPendingList()
+    public async Task<IActionResult> GetMyPendingList(int? page)
     {
         var userId = _account_util.AuthorizeRequest(Request);
         if (userId == null)
@@ -94,11 +96,12 @@ public class AssetController : ControllerBase
 
         if (Request.Method == "GET")
         {
-            var list = (List<ResponseModels.AssetResponseModel>)await _asset_repo.GetMyPendingList(userId.Value);
+            var list = (List<ResponseModels.AssetResponseModel>)await _asset_repo.GetMyPendingList(userId.Value, page);
+            var count =  await _asset_repo.GetMyPendingListCount(userId.Value);
             return Ok(new
             {
                 asset_list = list,
-                count = list.Count,
+                count = count,
             });
         }
         else if (Request.Method == "POST")
