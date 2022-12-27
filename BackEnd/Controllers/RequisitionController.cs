@@ -86,10 +86,10 @@ public class RequisitionController : ControllerBase
     }
 
     [HttpGet]
-    [Route("api/inventory/requisition/history")]
+    [Route("api/inventory/requisition/history/{page:int?}")]
     [Produces("application/json")]
     [Consumes("application/json")]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(int page)
     {
         var user = await _account_util.AuthorizeUser(Request);
         if (user == null || !(user.can_distribute_inventory || user.can_approve_inventory))
@@ -98,10 +98,12 @@ public class RequisitionController : ControllerBase
         }
         if (Request.Method == "GET")
         {
-            var list = (List<ResponseModels.RequisitionResponseModel>)await _requisition_repo.GetAllRequisitionList();
+            var list = (List<ResponseModels.RequisitionResponseModel>)await _requisition_repo.GetAllRequisitionList(page);
+            var count = await _requisition_repo.GetListCount();
             return Ok(new
             {
-                requisition_list = list
+                requisition_list = list,
+                count = count
             });
         }
         return NotFound();

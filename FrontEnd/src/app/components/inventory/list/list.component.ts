@@ -83,6 +83,10 @@ export class ListComponent implements OnInit {
     return false ? this.inventoryFormList[index].get('count')?.value >= 0 : true;
   }
 
+  getPageSize(): number {
+    return Common.PAGE_SIZE;
+  }
+
   onClick(item: Inventory): void {
     this.inventoryService.setCurrentInventory(item);
     this.globalService.navigate('inventory/edit');

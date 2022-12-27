@@ -40,7 +40,7 @@ export class RequisitionService {
   constructor(private http: HttpClient) { }
 
   getHistory(page: number = 1): Observable<string> {
-    let historyUrl = this.historyUrl.concat('?page=' + page);
+    let historyUrl = this.historyUrl.concat(page + '');
     return this.http.get<string>(historyUrl, this.common.getHttpHeader());
   }
 

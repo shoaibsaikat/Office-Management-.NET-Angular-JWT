@@ -21,10 +21,10 @@ class InventoryRepository : IInventoryRepository
         if (page != null)
         {
             list = await _context.Inventories
-                    .Skip((page.Value - 1) * _common_util.GetPageSize())
-                    .Take(_common_util.GetPageSize())
-                    // .Where(i => i.Id >= page * _common_util.GetPageSize() - _common_util.GetPageSize() && i.Id <= page * _common_util.GetPageSize())
-                    .ToListAsync();
+                                    .Skip((page.Value - 1) * _common_util.GetPageSize())
+                                    .Take(_common_util.GetPageSize())
+                                    // .Where(i => i.Id >= page * _common_util.GetPageSize() - _common_util.GetPageSize() && i.Id <= page * _common_util.GetPageSize())
+                                    .ToListAsync();
         }
         else
         {
@@ -33,7 +33,8 @@ class InventoryRepository : IInventoryRepository
         var responseList = new List<InventoryResponseModel>();
         foreach (var item in list)
         {
-            var model = new InventoryResponseModel {
+            var model = new InventoryResponseModel
+            {
                 id = item.Id,
                 name = item.Name,
                 count = item.Count,
