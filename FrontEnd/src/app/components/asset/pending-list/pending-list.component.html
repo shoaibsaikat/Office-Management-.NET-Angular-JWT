@@ -17,7 +17,7 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let item of assetList; let i=index;">
-                        <td>{{i+1}}</td>
+                        <td>{{((currentPage-1)*getPageSize())+(i+1)}}</td>
                         <td>{{item.name}}</td>
                         <td>{{item.model}}</td>
                         <td>{{item.serial}}</td>

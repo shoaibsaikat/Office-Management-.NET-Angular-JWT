@@ -22,17 +22,17 @@ export class AssetService {
   constructor(private http: HttpClient) { }
 
   getMyAssetList(page: number = 1): Observable<string> {
-    let myListUrl = this.myListUrl.concat('?page=' + page);
+    let myListUrl = this.myListUrl.concat(page + '');
     return this.http.get<string>(myListUrl, this.common.getHttpHeader());
   }
 
   getAllAssetList(page: number = 1): Observable<string> {
-    let allListUrl = this.allListUrl.concat('?page=' + page);
+    let allListUrl = this.allListUrl.concat(page + '');
     return this.http.get<string>(allListUrl, this.common.getHttpHeader());
   }
 
   getPendingAssetList(page: number = 1): Observable<string> {
-    let pendingUrl = this.pendingUrl.concat('?page=' + page);
+    let pendingUrl = this.pendingUrl.concat(page + '');
     return this.http.get<string>(pendingUrl, this.common.getHttpHeader());
   }
 

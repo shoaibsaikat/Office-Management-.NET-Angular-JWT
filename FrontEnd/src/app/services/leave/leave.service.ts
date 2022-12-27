@@ -25,17 +25,17 @@ export class LeaveService {
   constructor(private http: HttpClient) { }
 
   getMyLeaveList(page: number = 1): Observable<string> {
-    let myListUrl = this.myListUrl.concat('?page=' + page);
+    let myListUrl = this.myListUrl.concat(page + '');
     return this.http.get<string>(myListUrl, this.common.getHttpHeader());
   }
 
   getRequestLeaveList(page: number = 1): Observable<string> {
-    let requestListUrl = this.requestListUrl.concat('?page=' + page);
+    let requestListUrl = this.requestListUrl.concat(page + '');
     return this.http.get<string>(requestListUrl, this.common.getHttpHeader());
   }
 
   getLeaveSummaryList(year: number, page: number = 1): Observable<string> {
-    let leaveSummaryYearUrl = this.leaveSummaryUrl.concat(year + '/?page=' + page);
+    let leaveSummaryYearUrl = this.leaveSummaryUrl.concat(year + '/' + page);
     return this.http.get<string>(leaveSummaryYearUrl, this.common.getHttpHeader());
   }
 

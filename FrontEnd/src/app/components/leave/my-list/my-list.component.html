@@ -24,7 +24,7 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let item of leaveList; let i=index;">
-                        <td>{{i+1}}</td>
+                        <td>{{((currentPage-1)*getPageSize())+(i+1)}}</td>
                         <td><a class="cursor" (click)="onClick(item)">{{item.title}}</a></td>
                         <td>{{item.start_date|date}}</td>
                         <td>{{item.end_date|date}}</td>

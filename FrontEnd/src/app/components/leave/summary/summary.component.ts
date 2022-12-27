@@ -52,6 +52,10 @@ export class SummaryComponent implements OnInit {
     });
   }
 
+  getPageSize(): number {
+    return Common.PAGE_SIZE;
+  }
+
   onFirstClick(): void {
     this.currentPage = 1;
     this.updateHistory();
@@ -73,7 +77,7 @@ export class SummaryComponent implements OnInit {
   }
 
   hasNextPage(): boolean {
-    return !(this.currentPage * Common.PAGE_SIZE >= this.totalPage);
+    return !(this.currentPage >= this.totalPage);
   }
 
   hasPreviousPage(): boolean {

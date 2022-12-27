@@ -45,6 +45,10 @@ export class MyListComponent implements OnInit {
     });
   }
 
+  getPageSize(): number {
+    return Common.PAGE_SIZE;
+  }
+
   onClick(item: Leave): void {
     this.leaveService.setCurrentLeave(item);
     this.globalService.navigate('leave/detail');
@@ -71,7 +75,7 @@ export class MyListComponent implements OnInit {
   }
 
   hasNextPage(): boolean {
-    return !(this.currentPage * Common.PAGE_SIZE >= this.totalPage);
+    return !(this.currentPage >= this.totalPage);
   }
 
   hasPreviousPage(): boolean {
