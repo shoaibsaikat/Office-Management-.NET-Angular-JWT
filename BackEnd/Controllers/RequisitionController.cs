@@ -64,10 +64,10 @@ public class RequisitionController : ControllerBase
     }
 
     [HttpGet]
-    [Route("api/inventory/requisition/my_list")]
+    [Route("api/inventory/requisition/my_list/{page:int?}")]
     [Produces("application/json")]
     [Consumes("application/json")]
-    public async Task<IActionResult> GetMyList()
+    public async Task<IActionResult> GetMyList(int? page)
     {
         var user = await _account_util.AuthorizeUser(Request);
         if (user == null)
@@ -76,10 +76,12 @@ public class RequisitionController : ControllerBase
         }
         if (Request.Method == "GET")
         {
-            var list = (List<ResponseModels.RequisitionResponseModel>)await _requisition_repo.GetRequisitionListById(user.id);
+            var list = (List<ResponseModels.RequisitionResponseModel>)await _requisition_repo.GetRequisitionListById(user.id, page);
+            var count = await _requisition_repo.GetListCountById(user.id);
             return Ok(new
             {
-                requisition_list = list
+                requisition_list = list,
+                count = count
             });
         }
         return NotFound();
@@ -89,7 +91,7 @@ public class RequisitionController : ControllerBase
     [Route("api/inventory/requisition/history/{page:int?}")]
     [Produces("application/json")]
     [Consumes("application/json")]
-    public async Task<IActionResult> GetAll(int page)
+    public async Task<IActionResult> GetAll(int? page)
     {
         var user = await _account_util.AuthorizeUser(Request);
         if (user == null || !(user.can_distribute_inventory || user.can_approve_inventory))
@@ -110,10 +112,10 @@ public class RequisitionController : ControllerBase
     }
 
     [HttpGet, HttpPost]
-    [Route("api/inventory/requisition/approval")]
+    [Route("api/inventory/requisition/approval/{page:int?}")]
     [Produces("application/json")]
     [Consumes("application/json")]
-    public async Task<IActionResult> Approve()
+    public async Task<IActionResult> Approve(int? page)
     {
         var user = await _account_util.AuthorizeUser(Request);
         if (user == null || !user.can_approve_inventory)
@@ -122,12 +124,14 @@ public class RequisitionController : ControllerBase
         }
         if (Request.Method == "GET")
         {
-            var requisitionList = (List<ResponseModels.RequisitionResponseModel>)await _requisition_repo.GetPendingApprovalList(user.id);
+            var requisitionList = (List<ResponseModels.RequisitionResponseModel>)await _requisition_repo.GetPendingApprovalList(user.id, page);
             var distributorList = (List<ResponseModels.AccountResponseModel>)await _account_util.GetAllRequisitionDistributor();
+            var count = await _requisition_repo.GetPendingApprovalListCount(user.id);
             return Ok(new
             {
                 requisition_list = requisitionList,
-                distributor_list = distributorList
+                distributor_list = distributorList,
+                count = count
             });
         }
         else if (Request.Method == "POST")
@@ -149,10 +153,10 @@ public class RequisitionController : ControllerBase
     }
 
     [HttpGet, HttpPost]
-    [Route("api/inventory/requisition/distribution")]
+    [Route("api/inventory/requisition/distribution/{page:int?}")]
     [Produces("application/json")]
     [Consumes("application/json")]
-    public async Task<IActionResult> Distribute()
+    public async Task<IActionResult> Distribute(int? page)
     {
         var user = await _account_util.AuthorizeUser(Request);
         if (user == null || !user.can_distribute_inventory)
@@ -161,11 +165,12 @@ public class RequisitionController : ControllerBase
         }
         if (Request.Method == "GET")
         {
-            var requisitionList = (List<ResponseModels.RequisitionResponseModel>)await _requisition_repo.GetPendingDistributionList(user.id);
+            var requisitionList = (List<ResponseModels.RequisitionResponseModel>)await _requisition_repo.GetPendingDistributionList(user.id, page);
+            var count = await _requisition_repo.GetPendingDistributionListCount(user.id);
             return Ok(new
             {
                 requisition_list = requisitionList,
-                count = requisitionList.Count
+                count = count
             });
         }
         else if (Request.Method == "POST")

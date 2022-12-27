@@ -44,6 +44,10 @@ export class PendingDistributionComponent implements OnInit {
     });
   }
 
+  getPageSize(): number {
+    return Common.PAGE_SIZE;
+  }
+
   onDetailClick(item: Requisition): void {
     this.requisitionService.setCurrentRequisition(item);
     this.globalService.navigate('requisition/detail/' + Common.DETAIL_DISTRIBUTION);
@@ -77,7 +81,7 @@ export class PendingDistributionComponent implements OnInit {
   }
 
   hasNextPage(): boolean {
-    return !(this.currentPage * Common.PAGE_SIZE >= this.totalPage);
+    return !(this.currentPage >= this.totalPage);
   }
 
   hasPreviousPage(): boolean {

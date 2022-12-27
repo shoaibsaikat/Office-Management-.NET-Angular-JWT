@@ -45,7 +45,7 @@ export class RequisitionService {
   }
 
   getMyRequisitionList(page: number = 1): Observable<string> {
-    let myRequisitionUrl = this.myRequisitionUrl.concat('?page=' + page);
+    let myRequisitionUrl = this.myRequisitionUrl.concat(page + '');
     return this.http.get<string>(myRequisitionUrl, this.common.getHttpHeader());
   }
 
@@ -70,7 +70,7 @@ export class RequisitionService {
   }
 
   getApprovalList(page: number = 1): Observable<string> {
-    let approvalUrl = this.approvalUrl.concat('?page=' + page);
+    let approvalUrl = this.approvalUrl.concat(page + '');
     return this.http.get<string>(approvalUrl, this.common.getHttpHeader());
   }
 
@@ -82,7 +82,7 @@ export class RequisitionService {
   }
 
   getDistributionList(page: number = 1): Observable<string> {
-    let distributionUrl = this.distributionUrl.concat('?page=' + page);
+    let distributionUrl = this.distributionUrl.concat(page + '');
     return this.http.get<string>(distributionUrl, this.common.getHttpHeader());
   }
 

@@ -31,16 +31,40 @@ class RequisitionRepository : IRequisitionRepository
         await _context.SaveChangesAsync();
         return true;
     }
-
-    async Task<IEnumerable<RequisitionResponseModel>> IRequisitionRepository.GetRequisitionListById(int userId)
+    
+    async Task<int> IRequisitionRepository.GetListCountById(int userId)
     {
-        var list = await _context.Requisitions
+        return await _context.Requisitions.Where(i => i.UserId == userId).CountAsync();
+    }
+
+    async Task<IEnumerable<RequisitionResponseModel>> IRequisitionRepository.GetRequisitionListById(int userId, int? page)
+    {
+        List<Requisition> list;
+        if (page != null)
+        {
+            list = await _context.Requisitions
+                                    .Include(i => i.User)
+                                    .Include(i => i.Inventory)
+                                    .Include(i => i.Approver)
+                                    .Include(i => i.Distributor)
+                                    .OrderByDescending(i => i.Id)
+                                    .Where(i => i.UserId == userId)
+                                    .Skip((page.Value - 1) * _common_util.GetPageSize())
+                                    .Take(_common_util.GetPageSize())
+                                    .ToListAsync();
+        }
+        else
+        {
+            list = await _context.Requisitions
                                     .Include(i => i.User)
                                     .Include(i => i.Inventory)
                                     .Include(i => i.Approver)
                                     .Include(i => i.Distributor)
                                     .Where(i => i.UserId == userId)
+                                    .OrderByDescending(i => i.Id)
                                     .ToListAsync();
+        }
+
         // .Include() is a lazy loading, foreign tables are not by default included in query, rather they has to be explicitly loaded
         var responseList = new List<RequisitionResponseModel>();
         foreach (var item in list)
@@ -128,9 +152,30 @@ class RequisitionRepository : IRequisitionRepository
         return responseList;
     }
 
-    async Task<IEnumerable<RequisitionResponseModel>> IRequisitionRepository.GetPendingApprovalList(int approverId)
+    async Task<int> IRequisitionRepository.GetPendingApprovalListCount(int approverId)
     {
-        var list = await _context.Requisitions
+        return await _context.Requisitions.Where(i => i.ApproverId == approverId && (i.Approved == null || i.Approved == false)).CountAsync();
+    }
+
+    async Task<IEnumerable<RequisitionResponseModel>> IRequisitionRepository.GetPendingApprovalList(int approverId, int? page)
+    {
+        List<Requisition> list;
+        if (page != null)
+        {
+            list = await _context.Requisitions
+                                    .Include(i => i.User)
+                                    .Include(i => i.Inventory)
+                                    .Include(i => i.Approver)
+                                    .Include(i => i.Distributor)
+                                    .OrderByDescending(i => i.Id)
+                                    .Where(i => i.ApproverId == approverId && (i.Approved == null || i.Approved == false))
+                                    .Skip((page.Value - 1) * _common_util.GetPageSize())
+                                    .Take(_common_util.GetPageSize())
+                                    .ToListAsync();
+        }
+        else
+        {
+            list = await _context.Requisitions
                                     .Include(i => i.User)
                                     .Include(i => i.Inventory)
                                     .Include(i => i.Approver)
@@ -138,6 +183,8 @@ class RequisitionRepository : IRequisitionRepository
                                     .Where(i => i.ApproverId == approverId && (i.Approved == null || i.Approved == false))
                                     .OrderByDescending(i => i.Id)
                                     .ToListAsync();
+        }
+
         // .Include() is a lazy loading, foreign tables are not by default included in query, rather they has to be explicitly loaded
         var responseList = new List<RequisitionResponseModel>();
         foreach (var item in list)
@@ -181,9 +228,30 @@ class RequisitionRepository : IRequisitionRepository
         return false;
     }
 
-    async Task<IEnumerable<RequisitionResponseModel>> IRequisitionRepository.GetPendingDistributionList(int distributorId)
+    async Task<int> IRequisitionRepository.GetPendingDistributionListCount(int distributorId)
     {
-        var list = await _context.Requisitions
+        return await _context.Requisitions.Where(i => i.DistributorId == distributorId && (i.Distributed == null || i.Distributed == false)).CountAsync();
+    }
+
+    async Task<IEnumerable<RequisitionResponseModel>> IRequisitionRepository.GetPendingDistributionList(int distributorId, int? page)
+    {
+        List<Requisition> list;
+        if (page != null)
+        {
+            list = await _context.Requisitions
+                                    .Include(i => i.User)
+                                    .Include(i => i.Inventory)
+                                    .Include(i => i.Approver)
+                                    .Include(i => i.Distributor)
+                                    .OrderByDescending(i => i.Id)
+                                    .Where(i => i.DistributorId == distributorId && (i.Distributed == null || i.Distributed == false))
+                                    .Skip((page.Value - 1) * _common_util.GetPageSize())
+                                    .Take(_common_util.GetPageSize())
+                                    .ToListAsync();
+        }
+        else
+        {
+            list = await _context.Requisitions
                                     .Include(i => i.User)
                                     .Include(i => i.Inventory)
                                     .Include(i => i.Approver)
@@ -191,6 +259,8 @@ class RequisitionRepository : IRequisitionRepository
                                     .Where(i => i.DistributorId == distributorId && (i.Distributed == null || i.Distributed == false))
                                     .OrderByDescending(i => i.Id)
                                     .ToListAsync();
+        }
+
         // .Include() is a lazy loading, foreign tables are not by default included in query, rather they has to be explicitly loaded
         var responseList = new List<RequisitionResponseModel>();
         foreach (var item in list)

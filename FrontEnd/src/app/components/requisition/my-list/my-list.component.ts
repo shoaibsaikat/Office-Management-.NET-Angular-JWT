@@ -45,6 +45,10 @@ export class MyListComponent implements OnInit {
     });
   }
 
+  getPageSize(): number {
+    return Common.PAGE_SIZE;
+  }
+
   onClick(item: Requisition): void {
     this.requisitionService.setCurrentRequisition(item);
     this.globalService.navigate('requisition/detail/' + Common.DETAIL_NORMAL);
@@ -71,7 +75,7 @@ export class MyListComponent implements OnInit {
   }
 
   hasNextPage(): boolean {
-    return !(this.currentPage * Common.PAGE_SIZE >= this.totalPage);
+    return !(this.currentPage >= this.totalPage);
   }
 
   hasPreviousPage(): boolean {
