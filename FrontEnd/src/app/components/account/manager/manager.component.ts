@@ -19,6 +19,7 @@ export class ManagerComponent implements OnInit {
     manager: new FormControl(),
   });
   currentManger: number = -1;
+  currentMangerName: string = '';
 
   constructor(private globalService: GlobalService, private accountService: AccountService) { }
 
@@ -38,6 +39,9 @@ export class ManagerComponent implements OnInit {
           if (element && element.id != this.currentManger) {
             this.managerList.push(element);
             // console.log('ManagerComponent: id ' + element.id + ' '  + element.first_name);
+          } else {
+            // save current manager name
+            this.currentMangerName = element.first_name + ' ' + element.last_name;
           }
         });
       }
