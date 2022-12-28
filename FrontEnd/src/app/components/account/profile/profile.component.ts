@@ -17,7 +17,7 @@ export class ProfileComponent implements OnInit {
   profileForm: FormGroup = new FormGroup({
     firstName: new FormControl('', [Validators.required, ]),
     lastName: new FormControl('', [Validators.required, ]),
-    email: new FormControl('', [Validators.email, ]),
+    email: new FormControl('', [Validators.required, Validators.email, ]),
   });
   // get is not mandatory, it's for less code, if get is not added in that case from html we can get FormControl by using, profileForm.get('')
   get firstName() { return this.profileForm.get('firstName'); }

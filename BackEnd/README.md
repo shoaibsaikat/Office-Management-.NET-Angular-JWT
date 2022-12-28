@@ -50,6 +50,3 @@ How to register new user:
 3. Disable ssl verification in postman if needed.
 4. Set first name (first name is mandatory to show it in a list) and access permission from phpmyadmin.
 
-
-Need to fix:
-1. User profile email does not show as mandatory but does not update without it
