@@ -20,7 +20,7 @@ export class InventoryService {
     unit: '',
   };
 
-  private baseUrl: string = this.common.getBaseUrl().concat('inventory/');
+  private baseUrl: string = Common.getBaseUrl().concat('inventory/');
   private chartlistUrl: string = this.baseUrl.concat('inventory_list/');
   private quickEditUrl: string = this.baseUrl.concat('quick_edit/');
   private createUrl: string = this.baseUrl.concat('create/');
@@ -30,7 +30,7 @@ export class InventoryService {
 
   getInventoryList(page: number = 1): Observable<string> {
     let listUrl = this.baseUrl.concat(page + '');
-    return this.http.get<string>(listUrl, this.common.getHttpHeader());
+    return this.http.get<string>(listUrl, Common.getHttpHeader());
   }
 
   getInventoryChartList(): Observable<string> {
@@ -39,7 +39,7 @@ export class InventoryService {
 
   getEditInfo(item: number): Observable<string> {
     let editItemUrl: string = this.editUrl.concat(item + '/');
-    return this.http.get<string>(editItemUrl, this.common.getHttpHeader());
+    return this.http.get<string>(editItemUrl, Common.getHttpHeader());
   }
 
   createInventoryItem(item: Inventory): Observable<string> {
@@ -48,14 +48,14 @@ export class InventoryService {
       description: item.description,
       unit: item.unit,
       count: item.count,
-    }, this.common.getHttpHeader());
+    }, Common.getHttpHeader());
   }
 
   inventoryQuickUpdate(id: number, count: number): Observable<string> {
     return this.http.post<string>(this.quickEditUrl, {
       pk: id,
       amount: count,
-    }, this.common.getHttpHeader());
+    }, Common.getHttpHeader());
   }
 
   updateInventory(item: Inventory): Observable<string> {
@@ -63,7 +63,7 @@ export class InventoryService {
     return this.http.post<string>(editItemUrl, {
       count: item.count,
       description: item.description,
-    }, this.common.getHttpHeader());
+    }, Common.getHttpHeader());
   }
 
   setCurrentInventory(item: Inventory): void {

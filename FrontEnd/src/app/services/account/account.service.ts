@@ -14,11 +14,9 @@ import { Common } from '../../shared/common';
 
 export class AccountService {
 
-  private common: Common = new Common(this.http);
-
-  private baseUrl: string = this.common.getBaseUrl().concat('user/');
+  private baseUrl: string = Common.getBaseUrl().concat('user/');
   private logInUrl: string = this.baseUrl.concat('login/');
-  // private refreshUrl: string = this.common.getBaseUrl().concat('token/refresh/');
+  // private refreshUrl: string = Common.getBaseUrl().concat('token/refresh/');
   private logOutUrl: string = this.baseUrl.concat('signout/');
   private profileUrl: string = this.baseUrl.concat('change_profile/');
   private managerUrl: string = this.baseUrl.concat('change_manager/');
@@ -41,11 +39,11 @@ export class AccountService {
   // }
 
   logOut(): Observable<string> {
-    return this.http.post<string>(this.logOutUrl, null, this.common.getHttpHeader());
+    return this.http.post<string>(this.logOutUrl, null, Common.getHttpHeader());
   }
 
   getUserInfo(): Observable<User> {
-    return this.http.get<User>(this.userUrl, this.common.getHttpHeader());
+    return this.http.get<User>(this.userUrl, Common.getHttpHeader());
   }
 
   changeInfo(user: User): Observable<string> {
@@ -53,24 +51,24 @@ export class AccountService {
       first_name: user.first_name,
       last_name: user.last_name,
       email: user.email || '',
-    }, this.common.getHttpHeader());
+    }, Common.getHttpHeader());
   }
 
   getMangerList(): Observable<string> {
-    return this.http.get<string>(this.managerUrl, this.common.getHttpHeader());
+    return this.http.get<string>(this.managerUrl, Common.getHttpHeader());
   }
 
   setManger(id: number): Observable<string> {
     return this.http.post<string>(this.managerUrl, {
       manager: id,
-    }, this.common.getHttpHeader());
+    }, Common.getHttpHeader());
   }
 
   setPassword(last_pass: string, new_pass: string): Observable<string> {
     return this.http.post<string>(this.passwordUrl, {
       lastpassword: last_pass,
       newpassword: new_pass,
-    }, this.common.getHttpHeader());
+    }, Common.getHttpHeader());
   }
 
 }

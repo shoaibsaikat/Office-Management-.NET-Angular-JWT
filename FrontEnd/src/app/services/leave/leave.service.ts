@@ -15,7 +15,7 @@ export class LeaveService {
 
   private currentLeave: Leave = this.getEmptyLeave();
 
-  private baseUrl: string = this.common.getBaseUrl().concat('leave/');
+  private baseUrl: string = Common.getBaseUrl().concat('leave/');
   private createUrl: string = this.baseUrl.concat('create/');
   private myListUrl: string = this.baseUrl.concat('my_list/');
   private requestListUrl: string = this.baseUrl.concat('request_list/');
@@ -26,17 +26,17 @@ export class LeaveService {
 
   getMyLeaveList(page: number = 1): Observable<string> {
     let myListUrl = this.myListUrl.concat(page + '');
-    return this.http.get<string>(myListUrl, this.common.getHttpHeader());
+    return this.http.get<string>(myListUrl, Common.getHttpHeader());
   }
 
   getRequestLeaveList(page: number = 1): Observable<string> {
     let requestListUrl = this.requestListUrl.concat(page + '');
-    return this.http.get<string>(requestListUrl, this.common.getHttpHeader());
+    return this.http.get<string>(requestListUrl, Common.getHttpHeader());
   }
 
   getLeaveSummaryList(year: number, page: number = 1): Observable<string> {
     let leaveSummaryYearUrl = this.leaveSummaryUrl.concat(year + '/' + page);
-    return this.http.get<string>(leaveSummaryYearUrl, this.common.getHttpHeader());
+    return this.http.get<string>(leaveSummaryYearUrl, Common.getHttpHeader());
   }
 
   getCurrentLeave(): Leave {
@@ -66,7 +66,7 @@ export class LeaveService {
   }
 
   getLeaveCreationData(): Observable<string> {
-    return this.http.get<string>(this.createUrl, this.common.getHttpHeader());
+    return this.http.get<string>(this.createUrl, Common.getHttpHeader());
   }
 
   createLeave(leave: any): Observable<string> {
@@ -76,11 +76,11 @@ export class LeaveService {
       end: leave.end,
       days: leave.days,
       comment: leave.comment,
-    }, this.common.getHttpHeader());
+    }, Common.getHttpHeader());
   }
 
   approveLeave(id: number): Observable<string> {
     let approvalUrl = this.approvalUrl.concat(id + '/');
-    return this.http.post<string>(approvalUrl, null, this.common.getHttpHeader());
+    return this.http.post<string>(approvalUrl, null, Common.getHttpHeader());
   }
 }

@@ -29,7 +29,7 @@ export class RequisitionService {
   };
   private distributorList: User[] = [];
 
-  private baseUrl: string = this.common.getBaseUrl().concat('inventory/requisition/');
+  private baseUrl: string = Common.getBaseUrl().concat('inventory/requisition/');
   private historyUrl: string = this.baseUrl.concat('history/');
   private myRequisitionUrl: string = this.baseUrl.concat('my_list/');
   private detailUrl: string = this.baseUrl.concat('detail/');
@@ -41,21 +41,21 @@ export class RequisitionService {
 
   getHistory(page: number = 1): Observable<string> {
     let historyUrl = this.historyUrl.concat(page + '');
-    return this.http.get<string>(historyUrl, this.common.getHttpHeader());
+    return this.http.get<string>(historyUrl, Common.getHttpHeader());
   }
 
   getMyRequisitionList(page: number = 1): Observable<string> {
     let myRequisitionUrl = this.myRequisitionUrl.concat(page + '');
-    return this.http.get<string>(myRequisitionUrl, this.common.getHttpHeader());
+    return this.http.get<string>(myRequisitionUrl, Common.getHttpHeader());
   }
 
   getDetail(item: number): Observable<string> {
     let detailItemUrl: string = this.detailUrl.concat(item + '/');
-    return this.http.get<string>(detailItemUrl, this.common.getHttpHeader());
+    return this.http.get<string>(detailItemUrl, Common.getHttpHeader());
   }
 
   getAddInfo(): Observable<string> {
-    return this.http.get<string>(this.createUrl, this.common.getHttpHeader());
+    return this.http.get<string>(this.createUrl, Common.getHttpHeader());
   }
 
   createRequisition(title: string, inventory: number, approver: number, amount: number, comment: string): Observable<string> {
@@ -66,30 +66,30 @@ export class RequisitionService {
       approver: approver,
       amount: amount,
       comment: comment,
-    }, this.common.getHttpHeader());
+    }, Common.getHttpHeader());
   }
 
   getApprovalList(page: number = 1): Observable<string> {
     let approvalUrl = this.approvalUrl.concat(page + '');
-    return this.http.get<string>(approvalUrl, this.common.getHttpHeader());
+    return this.http.get<string>(approvalUrl, Common.getHttpHeader());
   }
 
   approve(id: number, distributor: number): Observable<string> {
     return this.http.post<string>(this.approvalUrl, {
       pk: id,
       distributor: distributor,
-    }, this.common.getHttpHeader());
+    }, Common.getHttpHeader());
   }
 
   getDistributionList(page: number = 1): Observable<string> {
     let distributionUrl = this.distributionUrl.concat(page + '');
-    return this.http.get<string>(distributionUrl, this.common.getHttpHeader());
+    return this.http.get<string>(distributionUrl, Common.getHttpHeader());
   }
 
   distribute(id: number): Observable<string> {
     return this.http.post<string>(this.distributionUrl, {
       pk: id,
-    }, this.common.getHttpHeader());
+    }, Common.getHttpHeader());
   }
 
   setCurrentRequisition(item: Requisition): void {
