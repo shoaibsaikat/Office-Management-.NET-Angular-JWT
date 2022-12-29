@@ -1,6 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
+import { HttpErrorResponse } from '@angular/common/http';
+
 import { GlobalService } from 'src/app/services/global/global.service';
 import { AccountService } from '../../../services/account/account.service';
 import { MessageService } from 'src/app/services/message/message.service';
@@ -44,7 +46,19 @@ export class SigninComponent implements OnInit {
         this.globalService.getUserInfo();
       },
       error: (e) => {
-        console.error(e);
+        // console.error(e);
+        if (e instanceof HttpErrorResponse && e.status == 401) {
+          // Unathorized
+          // we're not getting new access token after expire,
+          // if we want to implement getting new access token then it should be implemented using some timer
+          // TODO: for some api calls maybe we would not need to logout the user
+          if (e.error.detail && e.error.detail.length > 0) {
+            // backend user msg
+            // console.log(msg.detail);
+            this.messageService.addError(e.error.detail);
+          }
+          this.globalService.logOut();
+        }
       },
       complete: () => {
         this.changeDetectorRef.markForCheck();

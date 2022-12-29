@@ -18,3 +18,22 @@ Need to fix:
  a. Inventory quick edit success shows error msg in log
  b. Read OK response msg properly
  c. push success
+
+
+Error Response Example:
+1. Login Error:
+{
+    "headers": {
+        "normalizedNames": {},
+        "lazyUpdate": null
+    },
+    "status": 401,
+    "statusText": "OK",
+    "url": "https://127.0.0.1:7000/api/user/login/",
+    "ok": false,
+    "name": "HttpErrorResponse",
+    "message": "Http failure response for https://127.0.0.1:7000/api/user/login/: 401 OK",
+    "error": {
+        "detail": "Invalid Login credential"
+    }
+}

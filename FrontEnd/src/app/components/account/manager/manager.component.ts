@@ -36,7 +36,7 @@ export class ManagerComponent implements OnInit {
   getMangerList() {
     this.accountService.getMangerList().subscribe({
       next: (v) => {
-        console.log(JSON.parse(JSON.stringify(v)).user_list.result);
+        // console.log('ManagerComponent: ' + JSON.parse(JSON.stringify(v)).user_list.result);
         this.managerList = [];
         let objList: User[] = JSON.parse(JSON.stringify(v)).user_list.result;
         objList.forEach(element => {
