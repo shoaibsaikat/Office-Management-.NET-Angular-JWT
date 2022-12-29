@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { GlobalService } from 'src/app/services/global/global.service';
 import { AccountService } from '../../../services/account/account.service';
@@ -11,7 +11,10 @@ import { MessageService } from 'src/app/services/message/message.service';
 })
 export class SignoutComponent implements OnInit {
 
-  constructor(private globalService: GlobalService, private accountService: AccountService, private messageService: MessageService) { }
+  constructor(
+    private globalService: GlobalService,
+    private accountService: AccountService,
+    private messageService: MessageService) { }
 
   ngOnInit(): void {
   }

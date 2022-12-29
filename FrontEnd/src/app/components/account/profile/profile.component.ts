@@ -24,7 +24,9 @@ export class ProfileComponent implements OnInit {
   get lastName() { return this.profileForm.get('lastName'); }
   get email() { return this.profileForm.get('email'); }
 
-  constructor(private globalService: GlobalService, private accountService: AccountService) { }
+  constructor(
+    private globalService: GlobalService,
+    private accountService: AccountService) { }
 
   ngOnInit(): void {
     this.firstName?.setValue(this.user.first_name);

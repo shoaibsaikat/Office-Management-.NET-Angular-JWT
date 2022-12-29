@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { GlobalService } from 'src/app/services/global/global.service';
@@ -12,7 +12,8 @@ import { Common } from 'src/app/shared/common';
 @Component({
   selector: 'app-pending-approval',
   templateUrl: './pending-approval.component.html',
-  styleUrls: ['./pending-approval.component.css']
+  styleUrls: ['./pending-approval.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PendingApprovalComponent implements OnInit {
 
@@ -25,7 +26,11 @@ export class PendingApprovalComponent implements OnInit {
   currentPage: number = 1;
   totalPage: number = 1;
 
-  constructor(private requisitionService: RequisitionService, private messageService: MessageService, private globalService: GlobalService) { }
+  constructor(
+    private requisitionService: RequisitionService,
+    private messageService: MessageService,
+    private globalService: GlobalService,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.updateApprovalList();
@@ -58,6 +63,12 @@ export class PendingApprovalComponent implements OnInit {
             distributor: new FormControl('', [Validators.required, ]),
           }));
         });
+      },
+      error: (e) => {
+        console.error(e);
+      },
+      complete: () => {
+        this.changeDetectorRef.markForCheck();
       }
     });
   }

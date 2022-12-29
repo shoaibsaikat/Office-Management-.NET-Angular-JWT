@@ -17,7 +17,10 @@ export class DetailComponent implements OnInit {
   leave: Leave = this.leaveService.getEmptyLeave();
   user: User = this.globalService.getUser();
 
-  constructor(private leaveService: LeaveService, private messageService: MessageService, private globalService: GlobalService) { }
+  constructor(
+    private leaveService: LeaveService,
+    private messageService: MessageService,
+    private globalService: GlobalService) { }
 
   ngOnInit(): void {
     this.leave = this.leaveService.getCurrentLeave();

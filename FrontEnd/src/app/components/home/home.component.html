@@ -1,7 +1,7 @@
 <div class="row">
     <div class="card-header"><h3>Welcome to Office mangement!</h3></div>
+    <!-- above line is needed to refresh google charts properly, TODO: fix this by making refresh call -->
     <div class="card-body" id="inventoryPieChart">
-        <google-chart [title]="title" [type]="type" [columns]="columnNames" [data]="data" [height]="height" [options]="options" style="width: 100%;">
-        </google-chart>
+        <google-chart [title]="title" [type]="type" [columns]="columnNames" [data]="data" [height]="height" [options]="options" style="width: 100%;"></google-chart>
     </div>
 </div>

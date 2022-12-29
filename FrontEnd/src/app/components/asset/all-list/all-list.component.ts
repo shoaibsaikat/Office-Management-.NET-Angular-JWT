@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 import { AssetService } from 'src/app/services/asset/asset.service';
 
@@ -10,7 +10,8 @@ import { Common } from 'src/app/shared/common';
 @Component({
   selector: 'app-all-list',
   templateUrl: './all-list.component.html',
-  styleUrls: ['./all-list.component.css']
+  styleUrls: ['./all-list.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AllListComponent implements OnInit {
 
@@ -23,7 +24,9 @@ export class AllListComponent implements OnInit {
   currentPage: number = 1;
   totalPage: number = 1;
 
-  constructor(private assetService: AssetService) { }
+  constructor(
+    private assetService: AssetService,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.updateAllList();
@@ -81,6 +84,12 @@ export class AllListComponent implements OnInit {
             // console.log('AllListComponent: id:' + assetViewModel.id + ', user:' + element.user, ', status:' + assetViewModel.status);
           }
         });
+      },
+      error: (e) => {
+        console.error(e);
+      },
+      complete: () => {
+        this.changeDetectorRef.markForCheck();
       }
     });
   }

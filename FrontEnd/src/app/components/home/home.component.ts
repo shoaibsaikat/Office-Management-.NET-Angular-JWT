@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 import { ChartType } from 'angular-google-charts';
 
@@ -11,19 +11,24 @@ import { Inventory } from 'src/app/shared/types/inventory';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent implements OnInit {
 
   title = 'Inventory';
   type = ChartType.BarChart;
-  data: any[] = [];
+  data: (string | number)[][] = [];
   columnNames = ['Item', 'Amount'];
   options = { 'is3D': true, colors: ['#81E1F5', '#EF666D'] };
   // width = 800;
   height = 500;
 
-  constructor(private inventoryService: InventoryService, private messageService: MessageService, private globalService: GlobalService) {
+  constructor(
+    private inventoryService: InventoryService,
+    private messageService: MessageService,
+    private globalService: GlobalService,
+    private changeDetectorRef: ChangeDetectorRef) {
     this.getData();
   }
 
@@ -32,21 +37,29 @@ export class HomeComponent implements OnInit {
   }
 
   getData(): void {
-    this.inventoryService.getInventoryChartList().subscribe({
-      next: (v) => {
-        // console.log('HomeComponent: ' + JSON.stringify(v));
-        this.data = [];
-        let objInventoryList: Inventory[] = JSON.parse(JSON.stringify(v));
-        objInventoryList.forEach(element => {
-          if (element) {
-            let tmp = [];
-            tmp.push(element.name);
-            tmp.push(element.count);
-            this.data.push(tmp);
-          }
-        });
-      }
-    });
+    this.inventoryService.getInventoryChartList()
+      .subscribe({
+        next: (v) => {
+          // console.log('HomeComponent: ' + JSON.stringify(v));
+          this.data = [];
+          let objInventoryList: Inventory[] = JSON.parse(JSON.stringify(v));
+          objInventoryList.forEach(element => {
+            if (element) {
+              let tmp = [];
+              tmp.push(element.name);
+              tmp.push(element.count);
+              this.data.push(tmp);
+              // console.log('HomeComponent: ' + JSON.stringify(tmp));
+            }
+          });
+        },
+        error: (e) => {
+          console.error(e);
+        },
+        complete: () => {
+          this.changeDetectorRef.markForCheck();
+        }
+      });
   }
 
 }

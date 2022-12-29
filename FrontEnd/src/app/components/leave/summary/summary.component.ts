@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 import { GlobalService } from 'src/app/services/global/global.service';
 import { LeaveService } from 'src/app/services/leave/leave.service';
@@ -11,7 +11,8 @@ import { LeaveSummary } from 'src/app/shared/types/leave_summary';
 @Component({
   selector: 'app-summary',
   templateUrl: './summary.component.html',
-  styleUrls: ['./summary.component.css']
+  styleUrls: ['./summary.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SummaryComponent implements OnInit {
 
@@ -23,7 +24,11 @@ export class SummaryComponent implements OnInit {
   currentPage: number = 1;
   totalPage: number = 1;
 
-  constructor(private leaveService: LeaveService, private messageService: MessageService, private globalService: GlobalService) { }
+  constructor(
+    private leaveService: LeaveService,
+    private messageService: MessageService,
+    private globalService: GlobalService,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.updateHistory();
@@ -48,6 +53,12 @@ export class SummaryComponent implements OnInit {
             // console.log('SummaryComponent: ' + element.user + ':' + element.first_name);
           }
         });
+      },
+      error: (e) => {
+        console.error(e);
+      },
+      complete: () => {
+        this.changeDetectorRef.markForCheck();
       }
     });
   }

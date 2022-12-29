@@ -17,3 +17,4 @@ Need to fix:
 1. HTTP response msg parsing:
  a. Inventory quick edit success shows error msg in log
  b. Read OK response msg properly
+ c. push success

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 import { GlobalService } from 'src/app/services/global/global.service';
 import { LeaveService } from 'src/app/services/leave/leave.service';
@@ -10,7 +10,8 @@ import { Common } from 'src/app/shared/common';
 @Component({
   selector: 'app-request-list',
   templateUrl: './request-list.component.html',
-  styleUrls: ['./request-list.component.css']
+  styleUrls: ['./request-list.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RequestListComponent implements OnInit {
 
@@ -21,7 +22,11 @@ export class RequestListComponent implements OnInit {
   currentPage: number = 1;
   totalPage: number = 1;
 
-  constructor(private leaveService: LeaveService, private messageService: MessageService, private globalService: GlobalService) { }
+  constructor(
+    private leaveService: LeaveService,
+    private messageService: MessageService,
+    private globalService: GlobalService,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.getLeaveRequestList();
@@ -41,6 +46,12 @@ export class RequestListComponent implements OnInit {
             // console.log('MyListComponent: id ' + element.id + ':' + element.name);
           }
         });
+      },
+      error: (e) => {
+        console.error(e);
+      },
+      complete: () => {
+        this.changeDetectorRef.markForCheck();
       }
     });
   }

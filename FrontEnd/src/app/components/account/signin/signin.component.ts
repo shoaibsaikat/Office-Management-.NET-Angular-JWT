@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 import { GlobalService } from 'src/app/services/global/global.service';
@@ -11,14 +11,16 @@ import { User } from 'src/app/shared/types/user';
 @Component({
   selector: 'app-signin',
   templateUrl: './signin.component.html',
-  styleUrls: ['./signin.component.css']
+  styleUrls: ['./signin.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SigninComponent implements OnInit {
 
   constructor(
     private globalService: GlobalService,
     private accountService: AccountService,
-    private messageService: MessageService) { }
+    private messageService: MessageService,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
   }
@@ -40,6 +42,12 @@ export class SigninComponent implements OnInit {
         this.globalService.setCurrentUser(user);
 
         this.globalService.getUserInfo();
+      },
+      error: (e) => {
+        console.error(e);
+      },
+      complete: () => {
+        this.changeDetectorRef.markForCheck();
       }
     });
   }

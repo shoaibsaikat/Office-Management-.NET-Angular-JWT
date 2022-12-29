@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 import { GlobalService } from 'src/app/services/global/global.service';
 import { RequisitionService } from 'src/app/services/requisition/requisition.service';
@@ -10,7 +10,8 @@ import { Common } from 'src/app/shared/common';
 @Component({
   selector: 'app-my-list',
   templateUrl: './my-list.component.html',
-  styleUrls: ['./my-list.component.css']
+  styleUrls: ['./my-list.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MyListComponent implements OnInit {
 
@@ -21,7 +22,11 @@ export class MyListComponent implements OnInit {
   currentPage: number = 1;
   totalPage: number = 1;
 
-  constructor(private requisitionService: RequisitionService, private messageService: MessageService, private globalService: GlobalService) { }
+  constructor(
+    private requisitionService: RequisitionService,
+    private messageService: MessageService,
+    private globalService: GlobalService,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.updateMyList();
@@ -41,6 +46,12 @@ export class MyListComponent implements OnInit {
             // console.log('MyListComponent: id ' + element.id + ':' + element.name);
           }
         });
+      },
+      error: (e) => {
+        console.error(e);
+      },
+      complete: () => {
+        this.changeDetectorRef.markForCheck();
       }
     });
   }

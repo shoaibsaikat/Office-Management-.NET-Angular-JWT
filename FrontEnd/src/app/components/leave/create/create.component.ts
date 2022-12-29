@@ -26,13 +26,18 @@ export class CreateComponent implements OnInit {
 
   days: number = 0;
 
-  constructor(private leaveService: LeaveService, private messageService: MessageService, private globalService: GlobalService) { }
+  constructor(
+    private leaveService: LeaveService,
+    private messageService: MessageService,
+    private globalService: GlobalService) { }
 
   ngOnInit(): void {
     this.leaveService.getLeaveCreationData().subscribe({
-        next: (v) => { }, error: (e) => {
+        next: (v) => { },
+        error: (e) => {
           this.globalService.navigate('account/manager');
-        }, complete: () => { }
+        },
+        complete: () => { }
     });
   }
 

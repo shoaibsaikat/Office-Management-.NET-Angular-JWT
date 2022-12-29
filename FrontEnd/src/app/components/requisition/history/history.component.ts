@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 import { GlobalService } from 'src/app/services/global/global.service';
 import { RequisitionService } from 'src/app/services/requisition/requisition.service';
@@ -10,7 +10,8 @@ import { Common } from 'src/app/shared/common';
 @Component({
   selector: 'app-history',
   templateUrl: './history.component.html',
-  styleUrls: ['./history.component.css']
+  styleUrls: ['./history.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HistoryComponent implements OnInit {
 
@@ -21,7 +22,11 @@ export class HistoryComponent implements OnInit {
   currentPage: number = 1;
   totalPage: number = 1;
 
-  constructor(private requisitionService: RequisitionService, private messageService: MessageService, private globalService: GlobalService) { }
+  constructor(
+    private requisitionService: RequisitionService,
+    private messageService: MessageService,
+    private globalService: GlobalService,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.updateHistory();
@@ -41,6 +46,12 @@ export class HistoryComponent implements OnInit {
             // console.log('ListComponent: id ' + element.id + ':' + element.name);
           }
         });
+      },
+      error: (e) => {
+        console.error(e);
+      },
+      complete: () => {
+        this.changeDetectorRef.markForCheck();
       }
     });
   }

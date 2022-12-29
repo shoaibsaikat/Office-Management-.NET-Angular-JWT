@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
@@ -10,7 +10,8 @@ import { Inventory } from 'src/app/shared/types/inventory';
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.css']
+  styleUrls: ['./edit.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditComponent implements OnInit {
 
@@ -26,7 +27,8 @@ export class EditComponent implements OnInit {
 
   constructor(
     private inventoryService: InventoryService,
-    private globalService: GlobalService) { }
+    private globalService: GlobalService,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     let item = this.inventoryService.getCurrentInventory();
@@ -41,6 +43,12 @@ export class EditComponent implements OnInit {
         let description: string = JSON.parse(JSON.stringify(v)).description;
         // console.log('EditComponent: ' + description);
         this.inventoryForm.get('description')?.setValue(description);
+      },
+      error: (e) => {
+        console.error(e);
+      },
+      complete: () => {
+        this.changeDetectorRef.markForCheck();
       }
     });
 

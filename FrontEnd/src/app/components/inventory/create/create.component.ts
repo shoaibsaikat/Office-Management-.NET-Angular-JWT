@@ -26,7 +26,10 @@ export class CreateComponent implements OnInit {
   get count() { return this.inventoryForm.get('count'); }
   get description() { return this.inventoryForm.get('description'); }
 
-  constructor(private inventoryService: InventoryService, private messageService: MessageService, private globalService: GlobalService) { }
+  constructor(
+    private inventoryService: InventoryService,
+    private messageService: MessageService,
+    private globalService: GlobalService) { }
 
   ngOnInit(): void {
   }

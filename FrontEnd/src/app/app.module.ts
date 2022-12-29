@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { GoogleChartsModule } from 'angular-google-charts'; 
-import { RequestInterceptor } from './shared/request-interceptor';
+import { GoogleChartsModule } from 'angular-google-charts';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SigninComponent } from './components/account/signin/signin.component';
@@ -74,9 +73,7 @@ import { LoadingComponent } from './components/loading/loading.component';
     AppRoutingModule,
     GoogleChartsModule
   ],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: RequestInterceptor, multi: true }
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

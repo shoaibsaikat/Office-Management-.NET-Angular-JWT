@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 import { FormGroup, FormControl } from '@angular/forms';
 
@@ -13,7 +13,8 @@ import { Common } from 'src/app/shared/common';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
-  styleUrls: ['./list.component.css']
+  styleUrls: ['./list.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListComponent implements OnInit {
 
@@ -25,7 +26,11 @@ export class ListComponent implements OnInit {
   currentPage: number = 1;
   totalPage: number = 1;
 
-  constructor(private inventoryService: InventoryService, private messageService: MessageService, private globalService: GlobalService) { }
+  constructor(
+    private inventoryService: InventoryService,
+    private messageService: MessageService,
+    private globalService: GlobalService,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.updateInventoryList();
@@ -64,6 +69,12 @@ export class ListComponent implements OnInit {
         this.inventoryFormList.forEach((element, i) => {
           element.get('count')?.setValue(this.inventoryList[i].count);
         });
+      },
+      error: (e) => {
+        console.error(e);
+      },
+      complete: () => {
+        this.changeDetectorRef.markForCheck();
       }
     });
   }

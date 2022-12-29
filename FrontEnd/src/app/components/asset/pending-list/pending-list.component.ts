@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 import { AssetService } from 'src/app/services/asset/asset.service';
 import { MessageService } from 'src/app/services/message/message.service';
@@ -9,7 +9,8 @@ import { Common } from 'src/app/shared/common';
 @Component({
   selector: 'app-pending-list',
   templateUrl: './pending-list.component.html',
-  styleUrls: ['./pending-list.component.css']
+  styleUrls: ['./pending-list.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PendingListComponent implements OnInit {
 
@@ -20,7 +21,10 @@ export class PendingListComponent implements OnInit {
   currentPage: number = 1;
   totalPage: number = 1;
 
-  constructor(private assetService: AssetService, private messageService: MessageService) { }
+  constructor(
+    private assetService: AssetService,
+    private messageService: MessageService,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.updatePendingList();
@@ -40,6 +44,12 @@ export class PendingListComponent implements OnInit {
             // console.log('MyListComponent: id ' + element.id + ' '  + element.name + ' : ' + element.user);
           }
         });
+      },
+      error: (e) => {
+        console.error(e);
+      },
+      complete: () => {
+        this.changeDetectorRef.markForCheck();
       }
     });
   }

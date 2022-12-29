@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -11,7 +11,8 @@ import { Asset } from 'src/app/shared/types/asset';
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.css']
+  styleUrls: ['./edit.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditComponent implements OnInit {
 
@@ -30,7 +31,11 @@ export class EditComponent implements OnInit {
 
   statusList: Map<number, string> = new Map<number, string>();
 
-  constructor(private activatedRoute: ActivatedRoute, private assetService: AssetService, private globalService: GlobalService) { }
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private assetService: AssetService,
+    private globalService: GlobalService,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
 
@@ -57,6 +62,12 @@ export class EditComponent implements OnInit {
             this.warranty?.setValue(objAsset.warranty);
             this.description?.setValue(objAsset.description);
             this.status?.setValue(objAsset.status);
+          },
+          error: (e) => {
+            console.error(e);
+          },
+          complete: () => {
+            this.changeDetectorRef.markForCheck();
           }
         });
     });

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
@@ -12,7 +12,8 @@ import { Inventory } from 'src/app/shared/types/inventory';
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
-  styleUrls: ['./create.component.css']
+  styleUrls: ['./create.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateComponent implements OnInit {
 
@@ -32,7 +33,11 @@ export class CreateComponent implements OnInit {
   inventoryList: Map<number, string> = new Map<number, string>();
   approverList: Map<number, string> = new Map<number, string>();
 
-  constructor(private requisitionService: RequisitionService, private messageService: MessageService, private globalService: GlobalService) { }
+  constructor(
+    private requisitionService: RequisitionService,
+    private messageService: MessageService,
+    private globalService: GlobalService,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.requisitionService.getAddInfo().subscribe({
@@ -52,6 +57,12 @@ export class CreateComponent implements OnInit {
             this.approverList.set(element.id, element.first_name + ' ' + element.last_name);
           }
         });
+      },
+      error: (e) => {
+        console.error(e);
+      },
+      complete: () => {
+        this.changeDetectorRef.markForCheck();
       }
     });
   }

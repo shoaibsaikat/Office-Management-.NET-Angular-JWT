@@ -22,7 +22,9 @@ export class PasswordComponent implements OnInit {
   get newPassword1() { return this.passwordForm.get('newPassword1'); }
   get newPassword2() { return this.passwordForm.get('newPassword2'); }
 
-  constructor(private globalService: GlobalService, private accountService: AccountService) { }
+  constructor(
+    private globalService: GlobalService,
+    private accountService: AccountService) { }
 
   ngOnInit(): void {
   }

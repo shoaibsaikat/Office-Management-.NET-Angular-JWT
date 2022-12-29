@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 import { GlobalService } from 'src/app/services/global/global.service';
 import { RequisitionService } from 'src/app/services/requisition/requisition.service';
@@ -10,7 +10,8 @@ import { Requisition } from 'src/app/shared/types/requisition';
 @Component({
   selector: 'app-pending-distribution',
   templateUrl: './pending-distribution.component.html',
-  styleUrls: ['./pending-distribution.component.css']
+  styleUrls: ['./pending-distribution.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PendingDistributionComponent implements OnInit {
 
@@ -21,7 +22,11 @@ export class PendingDistributionComponent implements OnInit {
   currentPage: number = 1;
   totalPage: number = 1;
 
-  constructor(private requisitionService: RequisitionService, private messageService: MessageService, private globalService: GlobalService) { }
+  constructor(
+    private requisitionService: RequisitionService,
+    private messageService: MessageService,
+    private globalService: GlobalService,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.updateDistributionList();
@@ -40,6 +45,12 @@ export class PendingDistributionComponent implements OnInit {
             this.requisitionList.push(element);
           }
         });
+      },
+      error: (e) => {
+        console.error(e);
+      },
+      complete: () => {
+        this.changeDetectorRef.markForCheck();
       }
     });
   }

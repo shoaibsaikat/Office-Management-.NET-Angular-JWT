@@ -27,7 +27,10 @@ export class DetailComponent implements OnInit {
   requisition?: Requisition;
   distributorList: User[] = [];
 
-  constructor(private activatedRoute: ActivatedRoute, private requisitionService: RequisitionService, private globalService: GlobalService) {
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private requisitionService: RequisitionService,
+    private globalService: GlobalService) {
     this.activatedRoute.paramMap.subscribe(params => {
       this.state = Number(params.get('state'));
     });

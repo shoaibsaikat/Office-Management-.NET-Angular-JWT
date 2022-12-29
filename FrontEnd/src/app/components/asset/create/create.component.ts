@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
@@ -8,7 +8,8 @@ import { AssetService } from 'src/app/services/asset/asset.service';
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
-  styleUrls: ['./create.component.css']
+  styleUrls: ['./create.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateComponent implements OnInit {
 
@@ -34,7 +35,10 @@ export class CreateComponent implements OnInit {
   statusList: Map<number, string> = new Map<number, string>();
   typeList: Map<number, string> = new Map<number, string>();
 
-  constructor(private assetService: AssetService, private globalService: GlobalService) { }
+  constructor(
+    private assetService: AssetService,
+    private globalService: GlobalService,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.assetService.getAddInfo().subscribe({
@@ -63,6 +67,12 @@ export class CreateComponent implements OnInit {
           }
           i++;
         }
+      },
+      error: (e) => {
+        console.error(e);
+      },
+      complete: () => {
+        this.changeDetectorRef.markForCheck();
       }
     });
   }
@@ -83,7 +93,7 @@ export class CreateComponent implements OnInit {
       // console.log('ManagerComponent: ' + data.detail);
       this.globalService.navigate('');
     });
-    console.log('CreateComponent: ' + asset.description + ', ' + asset.status + ', ' + asset.type + ', ' + asset.warranty + ', ' + asset.purchaseDate);
+    // console.log('CreateComponent: ' + asset.description + ', ' + asset.status + ', ' + asset.type + ', ' + asset.warranty + ', ' + asset.purchaseDate);
   }
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 
 import { GlobalService } from 'src/app/services/global/global.service';
@@ -9,7 +9,8 @@ import { User } from 'src/app/shared/types/user';
 @Component({
   selector: 'app-manager',
   templateUrl: './manager.component.html',
-  styleUrls: ['./manager.component.css']
+  styleUrls: ['./manager.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ManagerComponent implements OnInit {
@@ -19,20 +20,23 @@ export class ManagerComponent implements OnInit {
     manager: new FormControl(),
   });
   currentManger: number = -1;
-  currentMangerName: string = '';
+  currentManagerName: string = "";
 
-  constructor(private globalService: GlobalService, private accountService: AccountService) { }
+  constructor(
+    private globalService: GlobalService,
+    private accountService: AccountService,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.getMangerList();
     this.currentManger = this.globalService.getUser().manager_id || -1;
-    // console.log('ManagerComponent: current ' + this.currentManger);
+    // console.log('ManagerComponent: current ' + this.currentManagerName);
   }
 
-  getMangerList(): void {
+  getMangerList() {
     this.accountService.getMangerList().subscribe({
       next: (v) => {
-        // console.log(JSON.stringify(v));
+        console.log(JSON.parse(JSON.stringify(v)).user_list.result);
         this.managerList = [];
         let objList: User[] = JSON.parse(JSON.stringify(v)).user_list.result;
         objList.forEach(element => {
@@ -41,9 +45,16 @@ export class ManagerComponent implements OnInit {
             // console.log('ManagerComponent: id ' + element.id + ' '  + element.first_name);
           } else {
             // save current manager name
-            this.currentMangerName = element.first_name + ' ' + element.last_name;
+            this.currentManagerName = element.first_name + ' ' + element.last_name;
+            // console.log('ManagerComponent: ' + this.currentManagerName);
           }
         });
+      },
+      error: (e) => {
+        console.error(e);
+      },
+      complete: () => {
+        this.changeDetectorRef.markForCheck();
       }
     });
   }

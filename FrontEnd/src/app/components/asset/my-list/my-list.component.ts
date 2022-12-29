@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 import { FormGroup, FormControl } from '@angular/forms';
 
@@ -13,7 +13,8 @@ import { Common } from 'src/app/shared/common';
 @Component({
   selector: 'app-my-list',
   templateUrl: './my-list.component.html',
-  styleUrls: ['./my-list.component.css']
+  styleUrls: ['./my-list.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MyListComponent implements OnInit {
 
@@ -26,7 +27,11 @@ export class MyListComponent implements OnInit {
   currentPage: number = 1;
   totalPage: number = 1;
 
-  constructor(private assetService: AssetService, private messageService: MessageService, private globalService: GlobalService) { }
+  constructor(
+    private assetService: AssetService,
+    private messageService: MessageService,
+    private globalService: GlobalService,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.updateMyList();
@@ -62,6 +67,12 @@ export class MyListComponent implements OnInit {
           }));
         });
         // console.log('MyListComponent: updateMyList() ' + this.assignFormList.length);
+      },
+      error: (e) => {
+        console.error(e);
+      },
+      complete: () => {
+        this.changeDetectorRef.markForCheck();
       }
     });
   }
