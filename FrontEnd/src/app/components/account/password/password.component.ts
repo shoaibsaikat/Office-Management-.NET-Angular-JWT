@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Validators, FormBuilder, FormGroup, FormControl, FormArray, ValidatorFn, ValidationErrors, AbstractControl } from '@angular/forms';
 
 import { GlobalService } from 'src/app/services/global/global.service';
 import { AccountService } from '../../../services/account/account.service';
+import { MessageService } from 'src/app/services/message/message.service';
 
 @Component({
   selector: 'app-password',
   templateUrl: './password.component.html',
-  styleUrls: ['./password.component.css']
+  styleUrls: ['./password.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PasswordComponent implements OnInit {
 
@@ -24,7 +26,9 @@ export class PasswordComponent implements OnInit {
 
   constructor(
     private globalService: GlobalService,
-    private accountService: AccountService) { }
+    private messageService: MessageService,
+    private accountService: AccountService,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
   }
@@ -34,9 +38,24 @@ export class PasswordComponent implements OnInit {
       return;
     }
 
-    this.accountService.setPassword(this.passwordForm.value.oldPassword, this.passwordForm.value.newPassword1).subscribe(data =>  {
-      // console.log('PasswordComponent: ' + data.detail);
-      this.globalService.navigate('');
+    this.accountService.setPassword(this.passwordForm.value.oldPassword, this.passwordForm.value.newPassword1).subscribe({
+      next: (v) => {
+		    // console.log('PasswordComponent: ' + data.detail);
+      },
+      error: (e) => {
+        // console.error(e);
+        if (e.status == 400 && e.error.detail && e.error.detail.length > 0) {
+          this.messageService.addError(e.error.detail);
+        } else {
+          this.globalService.handleUnauthorizedAccess(e);
+        }
+        this.changeDetectorRef.markForCheck();
+      },
+      complete: () => {
+        // console.log('complete');
+        this.messageService.addError('Passowrd Changed successfully');
+        this.globalService.navigate('');
+      }
     });
   }
 

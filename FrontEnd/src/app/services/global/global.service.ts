@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
-import { Subscription, timer, map } from 'rxjs'; 
+import { Subscription, timer, map } from 'rxjs';
+
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { User } from 'src/app/shared/types/user';
 
@@ -153,6 +155,21 @@ export class GlobalService {
     this.tokenSubscription?.unsubscribe();
   }
 
+  handleUnauthorizedAccess(e: HttpErrorResponse): void {
+    if (e.status == 401) {
+      // Unathorized
+      // we're not getting new access token after expire,
+      // if we want to implement getting new access token then it should be implemented using some timer
+      // TODO: for some api calls maybe we would not need to logout the user
+      if (e.error.detail && e.error.detail.length > 0) {
+        // backend user msg
+        // console.log(msg.detail);
+        this.messageService.addError(e.error.detail);
+      }
+      this.logOut();
+    }
+  }
+
   getUserInfo(): void {
     this.accountService.getUserInfo().subscribe({
       next: (v) => {
@@ -166,6 +183,12 @@ export class GlobalService {
         this.clearAllMessage();
 
         // this.getNewAccessToken();
+      },
+      error: (e) => {
+        console.error(e);
+        this.handleUnauthorizedAccess(e);
+      },
+      complete: () => {
       }
     });
   }

@@ -51,10 +51,12 @@ export class ManagerComponent implements OnInit {
         });
       },
       error: (e) => {
-        console.error(e);
+        // console.error(e);
+        this.globalService.handleUnauthorizedAccess(e);
+        this.changeDetectorRef.markForCheck();
       },
       complete: () => {
-        this.changeDetectorRef.markForCheck();
+        // this.changeDetectorRef.markForCheck();
       }
     });
   }

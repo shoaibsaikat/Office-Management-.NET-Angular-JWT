@@ -47,18 +47,8 @@ export class SigninComponent implements OnInit {
       },
       error: (e) => {
         // console.error(e);
-        if (e instanceof HttpErrorResponse && e.status == 401) {
-          // Unathorized
-          // we're not getting new access token after expire,
-          // if we want to implement getting new access token then it should be implemented using some timer
-          // TODO: for some api calls maybe we would not need to logout the user
-          if (e.error.detail && e.error.detail.length > 0) {
-            // backend user msg
-            // console.log(msg.detail);
-            this.messageService.addError(e.error.detail);
-          }
-          this.globalService.logOut();
-        }
+        this.globalService.handleUnauthorizedAccess(e);
+        this.changeDetectorRef.markForCheck();
       },
       complete: () => {
         this.changeDetectorRef.markForCheck();

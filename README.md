@@ -37,6 +37,11 @@ Misc.
 3. For certificate issue go to "chrome://flags/" or "edge://flags/", then enable "Allow invalid certificates for resources loaded from localhost."
 
 
+NOTE:
+If page don't show anything at first run, then hit below url at browser
+https://127.0.0.1:7000/api/inventory/inventory_list/
+and click continue.
+
 
 
 

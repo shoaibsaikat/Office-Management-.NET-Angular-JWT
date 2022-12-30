@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { GlobalService } from 'src/app/services/global/global.service';
 import { AccountService } from 'src/app/services/account/account.service';
+import { MessageService } from 'src/app/services/message/message.service';
 
 import { User } from 'src/app/shared/types/user';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  styleUrls: ['./profile.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ProfileComponent implements OnInit {
@@ -26,7 +28,9 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private globalService: GlobalService,
-    private accountService: AccountService) { }
+    private messageService: MessageService,
+    private accountService: AccountService,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.firstName?.setValue(this.user.first_name);
@@ -51,13 +55,29 @@ export class ProfileComponent implements OnInit {
       'email': email.trim(),
     }
 
-    this.accountService.changeInfo(user).subscribe(data =>  {
-      // console.log('ProfileComponent: ' + data.detail);
-      this.globalService.getUser().first_name = user.first_name;
-      this.globalService.getUser().last_name = user.last_name;
-      this.globalService.getUser().email = user.email;
-      this.globalService.saveCurrentUser();
-      this.globalService.navigate('');
+    this.accountService.changeInfo(user).subscribe({
+      next: (v) => {
+		     // console.log('ProfileComponent: ' + data.detail);
+         this.globalService.getUser().first_name = user.first_name;
+         this.globalService.getUser().last_name = user.last_name;
+         this.globalService.getUser().email = user.email;
+         this.globalService.saveCurrentUser();
+         this.globalService.navigate('');
+      },
+      error: (e) => {
+        // console.error(e);
+        if (e.status == 400 && e.error.detail && e.error.detail.length > 0) {
+          this.messageService.addError(e.error.detail);
+        } else {
+          this.globalService.handleUnauthorizedAccess(e);
+        }
+        this.changeDetectorRef.markForCheck();
+      },
+      complete: () => {
+        // console.log('complete');
+        this.messageService.addError('Profile Changed successfully');
+        this.globalService.navigate('');
+      }
     });
   }
 }
