@@ -76,7 +76,7 @@ export class CreateComponent implements OnInit {
     this.leaveService.createLeave(leave).subscribe(data => {
       // let msg = JSON.parse(JSON.stringify(data));
       // this.messageService.add(msg.detail);
-      this.globalService.navigate('/leave/my_list');
+      this.globalService.navigate('leave/my_list');
     });
 
   }

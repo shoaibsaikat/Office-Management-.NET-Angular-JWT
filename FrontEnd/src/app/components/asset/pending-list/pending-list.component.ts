@@ -65,6 +65,8 @@ export class PendingListComponent implements OnInit {
 
       // update local data
       this.assetList.splice(index, 1);
+
+      this.changeDetectorRef.markForCheck();
     });
   }
 
@@ -76,6 +78,8 @@ export class PendingListComponent implements OnInit {
 
       // update local data
       this.assetList.splice(index, 1);
+
+      this.changeDetectorRef.markForCheck();
     });
   }
 

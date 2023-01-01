@@ -74,7 +74,7 @@ public class AssetController : ControllerBase
                 var user = Convert.ToInt32(bodyJson.GetValue("assignee")?.ToString());
                 if (await _asset_repo.Assign(id, user))
                 {
-                    return Ok("Asset assigned");
+                    return Ok("Asset approved");
                 }
                 return NotFound("Asset assign failed");
             }
@@ -229,7 +229,7 @@ public class AssetController : ControllerBase
                     !String.IsNullOrEmpty(model) &&
                     !String.IsNullOrEmpty(serial))
                 {
-                    await _asset_repo.Create(
+                    if (await _asset_repo.Create(
                         userId.Value,
                         name,
                         model,
@@ -239,8 +239,11 @@ public class AssetController : ControllerBase
                         Convert.ToUInt16(status),
                         Convert.ToUInt64(warranty),
                         !String.IsNullOrEmpty(description) ? description : String.Empty
-                    );
-                    return Ok("Asset created");
+                    )) {
+                        return Ok("Asset created");
+                    } else {
+                        return NotFound("Asset creation failed");
+                    }
                 }
             }
         }

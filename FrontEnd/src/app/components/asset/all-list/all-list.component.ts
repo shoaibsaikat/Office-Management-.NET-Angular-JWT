@@ -89,6 +89,7 @@ export class AllListComponent implements OnInit {
       },
       error: (e) => {
         // console.error(e);
+        // handleUnauthorizedAccess contains logout which will redirect, so mark for change is not needed
         this.globalService.handleUnauthorizedAccess(e);
       },
       complete: () => {

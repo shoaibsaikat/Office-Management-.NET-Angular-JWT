@@ -212,30 +212,34 @@ class AssetRepository : IAssetRepository
 
     async Task<Boolean> IAssetRepository.Create(int id, string name, string model, string serial, DateTime purchaseDate, ushort type, ushort status, ulong warranty, string description)
     {
-        var asset = new Asset()
-        {
-            Name = name,
-            Model = model,
-            Serial = serial,
-            PurchaseDate = purchaseDate,
-            Type = type,
-            Status = status,
-            Warranty = warranty,
-            Description = description,
-            UserId = id
-        };
-        await _context.Assets.AddAsync(asset);
+        try {
+            var asset = new Asset()
+            {
+                Name = name,
+                Model = model,
+                Serial = serial,
+                PurchaseDate = purchaseDate,
+                Type = type,
+                Status = status,
+                Warranty = warranty,
+                Description = description,
+                UserId = id
+            };
+            await _context.Assets.AddAsync(asset);
+            await _context.SaveChangesAsync();
 
-        var history = new AssetHistory()
-        {
-            AssetId = asset.Id,
-            FromUserId = id,
-            ToUserId = id,
-            CreationDate = DateTime.UtcNow,
-        };
-        await _context.AssetHistories.AddAsync(history);
-        
-        await _context.SaveChangesAsync();
+            var history = new AssetHistory()
+            {
+                AssetId = asset.Id,
+                FromUserId = id,
+                ToUserId = id,
+                CreationDate = DateTime.UtcNow,
+            };
+            await _context.AssetHistories.AddAsync(history);
+            await _context.SaveChangesAsync();
+        } catch (Exception) {
+            return false;
+        }
         return true;
     }
 

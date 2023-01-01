@@ -38,3 +38,5 @@ Error Response Example:
         "detail": "Invalid Login credential"
     }
 }
+
+2. Assert Created OK:

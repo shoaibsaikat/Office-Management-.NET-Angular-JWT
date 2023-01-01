@@ -47,9 +47,8 @@ export class SigninComponent implements OnInit {
       },
       error: (e) => {
         // console.error(e);
-        if (this.globalService.handleUnauthorizedAccess(e)) {
-          this.changeDetectorRef.markForCheck();
-        }
+        // handleUnauthorizedAccess contains logout which will redirect, so mark for change is not needed
+        this.globalService.handleUnauthorizedAccess(e);
       },
       complete: () => {
         this.changeDetectorRef.markForCheck();

@@ -86,6 +86,8 @@ export class MyListComponent implements OnInit {
       this.messageService.add(msg);
       // update local data
       this.assetList[index].next_user = this.assignFormList[index].get('user')?.value;
+
+      this.changeDetectorRef.markForCheck();
     });
   }
 

@@ -69,7 +69,8 @@ export class CreateComponent implements OnInit {
         }
       },
       error: (e) => {
-        // console.error(e);
+        // console.log(e);
+        // handleUnauthorizedAccess contains logout which will redirect, so mark for change is not needed
         this.globalService.handleUnauthorizedAccess(e);
       },
       complete: () => {
@@ -92,7 +93,7 @@ export class CreateComponent implements OnInit {
 
     this.assetService.createAsset(asset).subscribe(data => {
       // console.log('ManagerComponent: ' + data.detail);
-      this.globalService.navigate('');
+      this.globalService.navigate('asset/all_list');
     });
     // console.log('CreateComponent: ' + asset.description + ', ' + asset.status + ', ' + asset.type + ', ' + asset.warranty + ', ' + asset.purchaseDate);
   }
