@@ -74,6 +74,7 @@ export class ProfileComponent implements OnInit {
         this.changeDetectorRef.markForCheck();
       },
       complete: () => {
+        // Incase of navigation this.changeDetectorRef.markForCheck(); is not needed as page change will trigger change
         // console.log('complete');
         this.messageService.addError('Profile Changed successfully');
         this.globalService.navigate('');

@@ -56,7 +56,8 @@ export class ManagerComponent implements OnInit {
         this.changeDetectorRef.markForCheck();
       },
       complete: () => {
-        // this.changeDetectorRef.markForCheck();
+        // This mark for change is needed
+        this.changeDetectorRef.markForCheck();
       }
     });
   }
