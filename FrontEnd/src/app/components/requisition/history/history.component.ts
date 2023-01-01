@@ -48,7 +48,8 @@ export class HistoryComponent implements OnInit {
         });
       },
       error: (e) => {
-        console.error(e);
+        // console.error(e);
+        this.globalService.handleUnauthorizedAccess(e);
       },
       complete: () => {
         this.changeDetectorRef.markForCheck();

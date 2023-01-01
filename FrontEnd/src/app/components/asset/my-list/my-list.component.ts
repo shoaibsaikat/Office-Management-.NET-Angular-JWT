@@ -69,7 +69,8 @@ export class MyListComponent implements OnInit {
         // console.log('MyListComponent: updateMyList() ' + this.assignFormList.length);
       },
       error: (e) => {
-        console.error(e);
+        // console.error(e);
+        this.globalService.handleUnauthorizedAccess(e);
       },
       complete: () => {
         this.changeDetectorRef.markForCheck();

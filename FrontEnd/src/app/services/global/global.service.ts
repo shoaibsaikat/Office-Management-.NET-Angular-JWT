@@ -155,19 +155,24 @@ export class GlobalService {
     this.tokenSubscription?.unsubscribe();
   }
 
-  handleUnauthorizedAccess(e: HttpErrorResponse): void {
-    if (e.status == 401) {
-      // Unathorized
-      // we're not getting new access token after expire,
-      // if we want to implement getting new access token then it should be implemented using some timer
-      // TODO: for some api calls maybe we would not need to logout the user
+  // returns true if mentioned http error occured
+  handleHttpErrorMessage(e: HttpErrorResponse, error: number): boolean {
+    if (e.status == error) {
       if (e.error.detail && e.error.detail.length > 0) {
-        // backend user msg
-        // console.log(msg.detail);
         this.messageService.addError(e.error.detail);
       }
-      this.logOut();
+      return true;
     }
+    return false;
+  }
+
+  // returns true if 401 error occures, otherwise false
+  handleUnauthorizedAccess(e: HttpErrorResponse): boolean {
+    if (this.handleHttpErrorMessage(e, 401)) {
+      this.logOut();
+      return true;
+    }
+    return false;
   }
 
   getUserInfo(): void {

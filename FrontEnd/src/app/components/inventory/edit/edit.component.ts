@@ -45,7 +45,8 @@ export class EditComponent implements OnInit {
         this.inventoryForm.get('description')?.setValue(description);
       },
       error: (e) => {
-        console.error(e);
+        // console.error(e);
+        this.globalService.handleUnauthorizedAccess(e);
       },
       complete: () => {
         this.changeDetectorRef.markForCheck();

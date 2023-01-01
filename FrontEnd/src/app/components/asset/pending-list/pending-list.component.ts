@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 
 import { AssetService } from 'src/app/services/asset/asset.service';
 import { MessageService } from 'src/app/services/message/message.service';
+import { GlobalService } from 'src/app/services/global/global.service';
 
 import { Asset } from 'src/app/shared/types/asset';
 import { Common } from 'src/app/shared/common';
@@ -23,6 +24,7 @@ export class PendingListComponent implements OnInit {
 
   constructor(
     private assetService: AssetService,
+    private globalService: GlobalService,
     private messageService: MessageService,
     private changeDetectorRef: ChangeDetectorRef) { }
 
@@ -46,7 +48,8 @@ export class PendingListComponent implements OnInit {
         });
       },
       error: (e) => {
-        console.error(e);
+        // console.error(e);
+        this.globalService.handleUnauthorizedAccess(e);
       },
       complete: () => {
         this.changeDetectorRef.markForCheck();

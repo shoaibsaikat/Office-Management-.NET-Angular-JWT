@@ -64,7 +64,8 @@ export class EditComponent implements OnInit {
             this.status?.setValue(objAsset.status);
           },
           error: (e) => {
-            console.error(e);
+            // console.error(e);
+            this.globalService.handleUnauthorizedAccess(e);
           },
           complete: () => {
             this.changeDetectorRef.markForCheck();

@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 import { AssetService } from 'src/app/services/asset/asset.service';
+import { GlobalService } from 'src/app/services/global/global.service';
 
 import { Asset } from 'src/app/shared/types/asset';
 import { AssetViewModel } from 'src/app/shared/types/asset_viewmodel';
@@ -25,6 +26,7 @@ export class AllListComponent implements OnInit {
   totalPage: number = 1;
 
   constructor(
+    private globalService: GlobalService,
     private assetService: AssetService,
     private changeDetectorRef: ChangeDetectorRef) { }
 
@@ -86,7 +88,8 @@ export class AllListComponent implements OnInit {
         });
       },
       error: (e) => {
-        console.error(e);
+        // console.error(e);
+        this.globalService.handleUnauthorizedAccess(e);
       },
       complete: () => {
         this.changeDetectorRef.markForCheck();

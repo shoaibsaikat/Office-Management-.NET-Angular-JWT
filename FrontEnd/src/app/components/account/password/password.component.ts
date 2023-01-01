@@ -44,10 +44,8 @@ export class PasswordComponent implements OnInit {
       },
       error: (e) => {
         // console.error(e);
-        if (e.status == 400 && e.error.detail && e.error.detail.length > 0) {
-          this.messageService.addError(e.error.detail);
-        } else {
-          this.globalService.handleUnauthorizedAccess(e);
+        if (this.globalService.handleUnauthorizedAccess(e) == false) {
+          this.globalService.handleHttpErrorMessage(e, 400);
         }
         this.changeDetectorRef.markForCheck();
       },

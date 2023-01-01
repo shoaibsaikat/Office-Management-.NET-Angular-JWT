@@ -35,7 +35,9 @@ export class CreateComponent implements OnInit {
     this.leaveService.getLeaveCreationData().subscribe({
         next: (v) => { },
         error: (e) => {
-          this.globalService.navigate('account/manager');
+          if (this.globalService.handleUnauthorizedAccess(e) == false) {
+            this.globalService.navigate('account/manager');
+          }
         },
         complete: () => { }
     });

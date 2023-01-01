@@ -18,6 +18,7 @@ Need to fix:
  a. Inventory quick edit success shows error msg in log
  b. Read OK response msg properly
  c. push success
+2. Loading screen
 
 
 Error Response Example:

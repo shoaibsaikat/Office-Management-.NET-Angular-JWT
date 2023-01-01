@@ -52,8 +52,9 @@ export class ManagerComponent implements OnInit {
       },
       error: (e) => {
         // console.error(e);
-        this.globalService.handleUnauthorizedAccess(e);
-        this.changeDetectorRef.markForCheck();
+        if (this.globalService.handleUnauthorizedAccess(e)) {
+          this.changeDetectorRef.markForCheck();
+        }
       },
       complete: () => {
         // This mark for change is needed
