@@ -81,14 +81,41 @@ export class ListComponent implements OnInit {
   }
 
   onSubmit(index: number): void {
-    // console.log('ListComponent: index: ' + index + ': ' + this.inventoryFormList[index].get('count')?.value);
-    this.inventoryService.inventoryQuickUpdate(this.inventoryList[index].id, this.inventoryFormList[index].get('count')?.value).subscribe(data => {
-      let msg = JSON.parse(JSON.stringify(data));
-      this.messageService.add(msg.text);
-      // console.log(msg);
-      // update local data
-      this.inventoryList[index].count = this.inventoryFormList[index].get('count')?.value;
+    // console.log('ListComponent: id: ' + this.inventoryList[index].id + ': ' + this.inventoryFormList[index].get('count')?.value);
+    this.inventoryService.inventoryQuickUpdate(this.inventoryList[index].id, this.inventoryFormList[index].get('count')?.value).subscribe({
+      next: (v) => {
+        // console.log('ListComponent: got quick update response');
+      },
+      error: (e) => {
+        // console.error(e);
+        if (this.globalService.handleUnauthorizedAccess(e) == false) {
+          if (this.globalService.handleHttpErrorMessage(e, 200)) {
+            let msg: string = JSON.parse(JSON.stringify(e.error.text));
+            this.messageService.add(msg);
+            // update local data
+            this.inventoryList[index].count = this.inventoryFormList[index].get('count')?.value;
+
+            this.changeDetectorRef.markForCheck();
+          }
+        }
+      },
+      complete: () => {
+        // this.changeDetectorRef.markForCheck();
+      }
     });
+    
+    // .subscribe(data => {
+
+      // console.log('ListComponent: got quick update response');
+
+      // let msg: string = JSON.parse(JSON.stringify(data));
+      // this.messageService.add(msg);
+      // console.log('ListComponent: quick update: ' + msg);
+      // // update local data
+      // this.inventoryList[index].count = this.inventoryFormList[index].get('count')?.value;
+
+      // this.changeDetectorRef.markForCheck();
+    // });
   }
 
   checkInventoryCount(index: number): boolean {

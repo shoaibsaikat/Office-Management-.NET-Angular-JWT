@@ -39,4 +39,20 @@ Error Response Example:
     }
 }
 
-2. Assert Created OK:
+2. Inventory quick edit OK:
+{
+    "headers": {
+        "normalizedNames": {},
+        "lazyUpdate": null
+    },
+    "status": 200,
+    "statusText": "OK",
+    "url": "https://127.0.0.1:7000/api/inventory/quick_edit/",
+    "ok": false,
+    "name": "HttpErrorResponse",
+    "message": "Http failure during parsing for https://127.0.0.1:7000/api/inventory/quick_edit/",
+    "error": {
+        "error": {},
+        "text": "Inventory updated"
+    }
+}

@@ -63,7 +63,7 @@ public class InventoryController : ControllerBase
             {
                 return Ok("Inventory updated");
             }
-            return NotFound("Asset assign failed");
+            return NotFound("Inventory update failed");
         }
     }
 
