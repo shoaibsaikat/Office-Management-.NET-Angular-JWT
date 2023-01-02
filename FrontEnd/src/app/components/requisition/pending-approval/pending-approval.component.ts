@@ -88,6 +88,15 @@ export class PendingApprovalComponent implements OnInit {
     this.requisitionService.approve(this.requisitionList[index].id, this.requisitionFormList[index].get('distributor')?.value).subscribe(data => {
       this.requisitionList.splice(index, 1);
       this.requisitionFormList.splice(index, 1);
+      this.changeDetectorRef.markForCheck();
+    });
+  }
+
+  onDenyClick(index: number): void {
+    this.requisitionService.deny(this.requisitionList[index].id).subscribe(data => {
+      this.requisitionList.splice(index, 1);
+      this.requisitionFormList.splice(index, 1);
+      this.changeDetectorRef.markForCheck();
     });
   }
 

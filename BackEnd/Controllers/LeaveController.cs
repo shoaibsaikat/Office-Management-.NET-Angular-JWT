@@ -136,11 +136,31 @@ public class LeaveController : ControllerBase
         {
             if (await _leave_repo.ApproveLeave(id))
             {
-                return Ok("Leave approved.");
+                return Ok("Leave approved");
             }
-            return NotFound("Leave approval failed.");
         }
-        return NotFound();
+        return NotFound("Leave approval failed");
+    }
+
+    [HttpPost]
+    [Route("api/leave/deny/{id:int}")]
+    [Produces("application/json")]
+    [Consumes("application/json")]
+    public async Task<IActionResult> Deny(int id)
+    {
+        var user = await _account_util.AuthorizeUser(Request);
+        if (user == null || !user.can_approve_leave)
+        {
+            return Unauthorized();
+        }
+        if (Request.Method == "POST")
+        {
+            if (await _leave_repo.DenyLeave(id))
+            {
+                return Ok("Leave denied");
+            }
+        }
+        return NotFound("Leave denial failed");
     }
 
     [HttpGet]

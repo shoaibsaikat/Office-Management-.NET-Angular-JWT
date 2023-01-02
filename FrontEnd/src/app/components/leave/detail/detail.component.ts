@@ -30,9 +30,21 @@ export class DetailComponent implements OnInit {
     // console.log('RequestListComponent: index: ' + index + ': ' + this.leaveList[index].title);
     this.leaveService.approveLeave(this.leave.id).subscribe(data => {
       let msg = JSON.parse(JSON.stringify(data));
-      this.messageService.add(msg.text);
+      // this.messageService.add(msg.text);
       // update local data
       this.leave = this.leaveService.getEmptyLeave();
+      this.globalService.navigate('leave/request_list');
+    });
+  }
+
+  onDeny(): void {
+    // console.log('RequestListComponent: index: ' + index + ': ' + this.leaveList[index].title);
+    this.leaveService.denyLeave(this.leave.id).subscribe(data => {
+      let msg = JSON.parse(JSON.stringify(data));
+      // this.messageService.add(msg.text);
+      // update local data
+      this.leave = this.leaveService.getEmptyLeave();
+      this.globalService.navigate('leave/request_list');
     });
   }
 

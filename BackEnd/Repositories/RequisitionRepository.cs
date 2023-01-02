@@ -15,8 +15,11 @@ class RequisitionRepository : IRequisitionRepository
         _common_util = commonUtil;
     }
 
-    async Task<Boolean> IRequisitionRepository.Create(int user, string title, int inventory, int apporver, UInt32 amount, string? comment)
+    async Task<bool> IRequisitionRepository.Create(int user, string title, int inventory, int apporver, UInt32 amount, string? comment)
     {
+        // if approved field is null then its on approver
+        // if  i'ts approved then approved field is 1
+        // if denied it's 0
         var requisition = new Requisition()
         {
             Title = title,
@@ -154,7 +157,7 @@ class RequisitionRepository : IRequisitionRepository
 
     async Task<int> IRequisitionRepository.GetPendingApprovalListCount(int approverId)
     {
-        return await _context.Requisitions.Where(i => i.ApproverId == approverId && (i.Approved == null || i.Approved == false)).CountAsync();
+        return await _context.Requisitions.Where(i => i.ApproverId == approverId && i.Approved == null).CountAsync();
     }
 
     async Task<IEnumerable<RequisitionResponseModel>> IRequisitionRepository.GetPendingApprovalList(int approverId, int? page)
@@ -168,7 +171,7 @@ class RequisitionRepository : IRequisitionRepository
                                     .Include(i => i.Approver)
                                     .Include(i => i.Distributor)
                                     .OrderByDescending(i => i.Id)
-                                    .Where(i => i.ApproverId == approverId && (i.Approved == null || i.Approved == false))
+                                    .Where(i => i.ApproverId == approverId && i.Approved == null)
                                     .Skip((page.Value - 1) * _common_util.GetPageSize())
                                     .Take(_common_util.GetPageSize())
                                     .ToListAsync();
@@ -180,7 +183,7 @@ class RequisitionRepository : IRequisitionRepository
                                     .Include(i => i.Inventory)
                                     .Include(i => i.Approver)
                                     .Include(i => i.Distributor)
-                                    .Where(i => i.ApproverId == approverId && (i.Approved == null || i.Approved == false))
+                                    .Where(i => i.ApproverId == approverId && i.Approved == null)
                                     .OrderByDescending(i => i.Id)
                                     .ToListAsync();
         }
@@ -228,9 +231,22 @@ class RequisitionRepository : IRequisitionRepository
         return false;
     }
 
+    async Task<bool> IRequisitionRepository.DenyRequisition(int id)
+    {
+        var requisition = await _context.Requisitions.FirstOrDefaultAsync(i => i.Id == id);
+        if (requisition != null)
+        {
+            requisition.Approved = false;
+            requisition.ApproveDate = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        return false;
+    }
+
     async Task<int> IRequisitionRepository.GetPendingDistributionListCount(int distributorId)
     {
-        return await _context.Requisitions.Where(i => i.DistributorId == distributorId && (i.Distributed == null || i.Distributed == false)).CountAsync();
+        return await _context.Requisitions.Where(i => i.DistributorId == distributorId && i.Distributed == null).CountAsync();
     }
 
     async Task<IEnumerable<RequisitionResponseModel>> IRequisitionRepository.GetPendingDistributionList(int distributorId, int? page)
@@ -244,7 +260,7 @@ class RequisitionRepository : IRequisitionRepository
                                     .Include(i => i.Approver)
                                     .Include(i => i.Distributor)
                                     .OrderByDescending(i => i.Id)
-                                    .Where(i => i.DistributorId == distributorId && (i.Distributed == null || i.Distributed == false))
+                                    .Where(i => i.DistributorId == distributorId && i.Distributed == null)
                                     .Skip((page.Value - 1) * _common_util.GetPageSize())
                                     .Take(_common_util.GetPageSize())
                                     .ToListAsync();
@@ -256,7 +272,7 @@ class RequisitionRepository : IRequisitionRepository
                                     .Include(i => i.Inventory)
                                     .Include(i => i.Approver)
                                     .Include(i => i.Distributor)
-                                    .Where(i => i.DistributorId == distributorId && (i.Distributed == null || i.Distributed == false))
+                                    .Where(i => i.DistributorId == distributorId && i.Distributed == null)
                                     .OrderByDescending(i => i.Id)
                                     .ToListAsync();
         }

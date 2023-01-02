@@ -49,7 +49,7 @@ export class DetailComponent implements OnInit {
     return true ? this.state == Common.DETAIL_DISTRIBUTION : false;
   }
 
-  onClick(): void {
+  onApproveClick(): void {
     if (this.isApproval() && this.requisition && this.distributor) {
       this.requisitionService.approve(this.requisition.id, this.distributor.value).subscribe(data => {
         this.globalService.navigate('requisition/approval');
@@ -57,6 +57,14 @@ export class DetailComponent implements OnInit {
     } else if (this.isDistribution() && this.requisition) {
       this.requisitionService.distribute(this.requisition.id).subscribe(data => {
         this.globalService.navigate('requisition/distribution');
+      });
+    }
+  }
+
+  onDenyClick(): void {
+    if (this.isApproval() && this.requisition) {
+      this.requisitionService.deny(this.requisition.id).subscribe(data => {
+        this.globalService.navigate('requisition/approval');
       });
     }
   }

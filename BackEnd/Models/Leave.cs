@@ -8,7 +8,7 @@ namespace _NET_Office_Management_BackEnd.Models
         public int Id { get; set; }
         public string Title { get; set; } = null!;
         public DateTime CreationDate { get; set; }
-        public bool Approved { get; set; }
+        public bool? Approved { get; set; }
         public DateTime? ApproveDate { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

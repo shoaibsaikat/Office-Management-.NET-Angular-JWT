@@ -88,7 +88,8 @@ export class ListComponent implements OnInit {
       },
       error: (e) => {
         // console.error(e);
-        if (this.globalService.handleUnauthorizedAccess(e) == false) {
+        // TODO: need to check why success message is shown under error
+        if (!this.globalService.handleUnauthorizedAccess(e)) {
           if (this.globalService.handleHttpErrorMessage(e, 200)) {
             let msg: string = JSON.parse(JSON.stringify(e.error.text));
             this.messageService.add(msg);

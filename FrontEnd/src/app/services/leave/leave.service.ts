@@ -21,6 +21,7 @@ export class LeaveService {
   private requestListUrl: string = this.baseUrl.concat('request_list/');
   private leaveSummaryUrl: string = this.baseUrl.concat('summary/');
   private approvalUrl: string = this.baseUrl.concat('approve/');
+  private denialUrl: string = this.baseUrl.concat('deny/');
 
   constructor(private http: HttpClient) { }
 
@@ -82,5 +83,10 @@ export class LeaveService {
   approveLeave(id: number): Observable<string> {
     let approvalUrl = this.approvalUrl.concat(id + '/');
     return this.http.post<string>(approvalUrl, null, Common.getHttpHeader());
+  }
+
+  denyLeave(id: number): Observable<string> {
+    let denialUrl = this.denialUrl.concat(id + '/');
+    return this.http.post<string>(denialUrl, null, Common.getHttpHeader());
   }
 }

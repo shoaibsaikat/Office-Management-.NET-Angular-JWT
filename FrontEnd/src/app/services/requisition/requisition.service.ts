@@ -35,6 +35,7 @@ export class RequisitionService {
   private detailUrl: string = this.baseUrl.concat('detail/');
   private createUrl: string = this.baseUrl.concat('create/');
   private approvalUrl: string = this.baseUrl.concat('approval/');
+  private denialUrl: string = this.baseUrl.concat('denial/');
   private distributionUrl: string = this.baseUrl.concat('distribution/');
 
   constructor(private http: HttpClient) { }
@@ -78,6 +79,12 @@ export class RequisitionService {
     return this.http.post<string>(this.approvalUrl, {
       pk: id,
       distributor: distributor,
+    }, Common.getHttpHeader());
+  }
+
+  deny(id: number): Observable<string> {
+    return this.http.post<string>(this.denialUrl, {
+      pk: id
     }, Common.getHttpHeader());
   }
 

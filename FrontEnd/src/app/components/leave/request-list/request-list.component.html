@@ -12,7 +12,8 @@
                     <th scope="col">Start</th>
                     <th scope="col">End</th>
                     <th scope="col">Days</th>
-                    <th scope="col">Action</th>
+                    <th scope="col">Approve</th>
+                    <th scope="col">Deny</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -24,6 +25,9 @@
                         <td>{{item.day_count}}</td>
                         <td>
                             <button type="submit" class="btn btn-cyan" (click)="onApprove(i)">Approve</button>
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-cyan" (click)="onDeny(i)">Deny</button>
                         </td>
                     </tr>
                 </tbody>

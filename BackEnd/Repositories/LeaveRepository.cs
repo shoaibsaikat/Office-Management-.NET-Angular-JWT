@@ -15,7 +15,7 @@ class LeaveRepository : ILeaveRepository
         _common_util = commonUtil;
     }
 
-    async Task<Boolean> ILeaveRepository.Create(AccountResponseModel user, string title, DateTime start, DateTime end, UInt32 days, string comment)
+    async Task<bool> ILeaveRepository.Create(AccountResponseModel user, string title, DateTime start, DateTime end, UInt32 days, string comment)
     {
         if (user.manager_id != null)
         {
@@ -90,7 +90,7 @@ class LeaveRepository : ILeaveRepository
 
     async Task<int> ILeaveRepository.GetPendingApprovalListCount(int approverId)
     {
-        return await _context.Leaves.Where(i => i.ApproverId == approverId && i.Approved == false).CountAsync();
+        return await _context.Leaves.Where(i => i.ApproverId == approverId && i.Approved == null).CountAsync();
     }
 
     async Task<IEnumerable<LeaveResponseModel>> ILeaveRepository.GetPendingApprovalList(int approverId, int? page)
@@ -99,7 +99,7 @@ class LeaveRepository : ILeaveRepository
         if (page != null)
         {
             list = await _context.Leaves
-                                    .Where(i => i.ApproverId == approverId && i.Approved == false)
+                                    .Where(i => i.ApproverId == approverId && i.Approved == null)
                                     .Include(i => i.User)
                                     .OrderByDescending(i => i.Id)
                                     .Skip((page.Value - 1) * _common_util.GetPageSize())
@@ -109,7 +109,7 @@ class LeaveRepository : ILeaveRepository
         else
         {
             list = await _context.Leaves
-                            .Where(i => i.ApproverId == approverId && i.Approved == false)
+                            .Where(i => i.ApproverId == approverId && i.Approved == null)
                             .Include(i => i.User)
                             .OrderByDescending(i => i.Id)
                             .ToListAsync();
@@ -145,6 +145,19 @@ class LeaveRepository : ILeaveRepository
         if (leave != null)
         {
             leave.Approved = true;
+            leave.ApproveDate = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        return false;
+    }
+
+    async Task<bool> ILeaveRepository.DenyLeave(int id)
+    {
+        var leave = await _context.Leaves.FirstOrDefaultAsync(i => i.Id == id);
+        if (leave != null)
+        {
+            leave.Approved = false;
             leave.ApproveDate = DateTime.UtcNow;
             await _context.SaveChangesAsync();
             return true;

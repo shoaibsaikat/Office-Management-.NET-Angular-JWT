@@ -60,7 +60,7 @@ public class RequisitionController : ControllerBase
             }
         }
 
-        return NotFound();
+        return NotFound("Requisition creation failed");
     }
 
     [HttpGet]
@@ -147,6 +147,34 @@ public class RequisitionController : ControllerBase
                     return Ok("Requisition approved");
                 }
                 return NotFound("Requisition approval failed");
+            }
+        }
+        return NotFound();
+    }
+
+    [HttpPost]
+    [Route("api/inventory/requisition/denial")]
+    [Produces("application/json")]
+    [Consumes("application/json")]
+    public async Task<IActionResult> Deny()
+    {
+        var user = await _account_util.AuthorizeUser(Request);
+        if (user == null || !user.can_approve_inventory)
+        {
+            return Unauthorized();
+        }
+        if (Request.Method == "POST")
+        {
+            using (var reader = new StreamReader(Request.Body))
+            {
+                var body = await reader.ReadToEndAsync();
+                var bodyJson = JObject.Parse(body);
+                var id = Convert.ToInt32(bodyJson.GetValue("pk")?.ToString());
+                if (await _requisition_repo.DenyRequisition(id))
+                {
+                    return Ok("Requisition denied");
+                }
+                return NotFound("Requisition denial failed");
             }
         }
         return NotFound();

@@ -69,6 +69,18 @@ export class RequestListComponent implements OnInit {
       // this.messageService.add(msg.text);
       // update local data
       this.leaveList.splice(index, 1);
+      this.changeDetectorRef.markForCheck();
+    });
+  }
+
+  onDeny(index: number): void {
+    // console.log('RequestListComponent: index: ' + index + ': ' + this.leaveList[index].title);
+    this.leaveService.denyLeave(this.leaveList[index].id).subscribe(data => {
+      // let msg = JSON.parse(JSON.stringify(data));
+      // this.messageService.add(msg.text);
+      // update local data
+      this.leaveList.splice(index, 1);
+      this.changeDetectorRef.markForCheck();
     });
   }
 
