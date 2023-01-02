@@ -26,7 +26,8 @@ class JWTTokenUtil : ITokenUtil
             claims.Add(new Claim(ClaimTypes.Role, role));
         });
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtKey"]));
+        var jwtKey = _configuration["JwtKey"];
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey == null ? "" : jwtKey));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JwtExpireDays"]));
 
@@ -48,7 +49,8 @@ class JWTTokenUtil : ITokenUtil
             return null;
         }
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtKey"]));
+        var jwtKey = _configuration["JwtKey"];
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey == null ? "" : jwtKey));
         try
         {
             new JwtSecurityTokenHandler().ValidateToken(token, new TokenValidationParameters
