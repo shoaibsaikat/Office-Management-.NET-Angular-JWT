@@ -19,6 +19,7 @@ Entity Framework Core:
 5. dotnet ef database update
 6. dotnet ef migrations list
 7. dotnet ef migrations remove
+8. dotnet tool update --global dotnet-ef
 
 MariaDB:
 1. dotnet add package Pomelo.EntityFrameworkCore.MySql
