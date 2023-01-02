@@ -30,7 +30,6 @@ public class RequisitionController : ControllerBase
         {
             return Unauthorized();
         }
-
         if (Request.Method == "GET")
         {
             var inventoryList = (List<ResponseModels.InventoryResponseModel>)await _inventory_repo.GetAllList(null);
@@ -59,7 +58,6 @@ public class RequisitionController : ControllerBase
                 }
             }
         }
-
         return NotFound("Requisition creation failed");
     }
 
@@ -146,10 +144,9 @@ public class RequisitionController : ControllerBase
                 {
                     return Ok("Requisition approved");
                 }
-                return NotFound("Requisition approval failed");
             }
         }
-        return NotFound();
+        return NotFound("Requisition approval failed");
     }
 
     [HttpPost]
@@ -174,10 +171,9 @@ public class RequisitionController : ControllerBase
                 {
                     return Ok("Requisition denied");
                 }
-                return NotFound("Requisition denial failed");
             }
         }
-        return NotFound();
+        return NotFound("Requisition denial failed");
     }
 
     [HttpGet, HttpPost]

@@ -29,7 +29,6 @@ public class AssetController : ControllerBase
         {
             return Unauthorized();
         }
-
         var list = (List<ResponseModels.AssetResponseModel>)await _asset_repo.GetAllList(page);
         var count = await _asset_repo.GetListCount();
         return Ok(new
@@ -52,7 +51,6 @@ public class AssetController : ControllerBase
         {
             return Unauthorized();
         }
-
         if (Request.Method == "GET")
         {
             var list = (List<ResponseModels.AssetResponseModel>)await _asset_repo.GetMyList(userId.Value, page);
@@ -74,12 +72,11 @@ public class AssetController : ControllerBase
                 var user = Convert.ToInt32(bodyJson.GetValue("assignee")?.ToString());
                 if (await _asset_repo.Assign(id, user))
                 {
-                    return Ok("Asset approved");
+                    return Ok("Asset assigned");
                 }
-                return NotFound("Asset assign failed");
             }
         }
-        return NotFound();
+        return NotFound("Asset assign failed");
     }
 
     [HttpGet, HttpPost, HttpPut]
@@ -93,7 +90,6 @@ public class AssetController : ControllerBase
         {
             return Unauthorized();
         }
-
         if (Request.Method == "GET")
         {
             var list = (List<ResponseModels.AssetResponseModel>)await _asset_repo.GetMyPendingList(userId.Value, page);
@@ -129,10 +125,9 @@ public class AssetController : ControllerBase
                 {
                     return Ok("Asset declined");
                 }
-                return NotFound("Asset decline failed");
             }
         }
-        return NotFound();
+        return NotFound("Asset decline failed");
     }
 
     [HttpGet, HttpPost]
@@ -146,13 +141,11 @@ public class AssetController : ControllerBase
         {
             return Unauthorized();
         }
-
         var asset = await _asset_repo.GetById(id);
         if (asset == null)
         {
             return NotFound();
         }
-
         if (Request.Method == "GET")
         {
             var statusList = _asset_repo.GetStatus();
@@ -181,10 +174,9 @@ public class AssetController : ControllerBase
                 {
                     return Ok("Asset updated");
                 }
-                return NotFound("Asset update failed");
             }
         }
-        return NotFound();
+        return NotFound("Asset update failed");
     }
 
     [HttpGet, HttpPost]
@@ -198,7 +190,6 @@ public class AssetController : ControllerBase
         {
             return Unauthorized();
         }
-
         if (Request.Method == "GET")
         {
             var statusList = _asset_repo.GetStatus();

@@ -99,7 +99,6 @@ public class AccountController : ControllerBase
         {
             return Unauthorized();
         }
-
         using (var reader = new StreamReader(Request.Body))
         {
             var body = await reader.ReadToEndAsync();
@@ -126,7 +125,6 @@ public class AccountController : ControllerBase
         {
             return Unauthorized();
         }
-
         if (Request.Method == "GET")
         {
             var responseList = _account_repo.GetAllManager();
@@ -162,7 +160,6 @@ public class AccountController : ControllerBase
         {
             return Unauthorized();
         }
-
         using (var reader = new StreamReader(Request.Body))
         {
             var body = await reader.ReadToEndAsync();

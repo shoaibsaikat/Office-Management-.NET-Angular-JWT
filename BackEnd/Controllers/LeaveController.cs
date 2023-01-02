@@ -30,7 +30,6 @@ public class LeaveController : ControllerBase
         {
             return Unauthorized();
         }
-
         if (Request.Method == "GET")
         {
             if (user.manager_id == null)

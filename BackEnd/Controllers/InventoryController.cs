@@ -33,7 +33,6 @@ public class InventoryController : ControllerBase
         {
             return Unauthorized();
         }
-
         var list = (List<ResponseModels.InventoryResponseModel>)await _inventory_repo.GetAllList(page);
         var count = await _inventory_repo.GetListCount();
         return Ok(new
@@ -52,7 +51,6 @@ public class InventoryController : ControllerBase
         {
             return Unauthorized();
         }
-
         using (var reader = new StreamReader(Request.Body))
         {
             var body = await reader.ReadToEndAsync();
@@ -78,7 +76,6 @@ public class InventoryController : ControllerBase
         {
             return Unauthorized();
         }
-
         if (Request.Method == "GET")
         {
             var item = await _inventory_repo.GetById(id);
@@ -103,10 +100,9 @@ public class InventoryController : ControllerBase
                 {
                     return Ok("Inventory updated");
                 }
-                return NotFound("Inventory assign failed");
             }
         }
-        return NotFound();
+        return NotFound("Inventory assign failed");
     }
 
     [HttpPost]
@@ -120,7 +116,6 @@ public class InventoryController : ControllerBase
         {
             return Unauthorized();
         }
-
         using (var reader = new StreamReader(Request.Body))
         {
             var body = await reader.ReadToEndAsync();
