@@ -11,8 +11,8 @@ using _NET_Office_Management_BackEnd.Models;
 namespace NETOfficeManagementBackEnd.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230102144000_dotnet upgrade")]
-    partial class dotnetupgrade
+    [Migration("20230102144000_Dotnet upgrade")]
+    partial class Dotnetupgrade
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

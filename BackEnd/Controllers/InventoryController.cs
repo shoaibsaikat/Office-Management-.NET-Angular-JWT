@@ -17,15 +17,15 @@ public class InventoryController : ControllerBase
         _inventory_repo = repo;
     }
 
-    [Route("api/inventory/inventory_list")]
     [HttpGet]
+    [Route("api/inventory/inventory_list")]
     public async Task<IActionResult> GetChartList()
     {
         return Ok(await _inventory_repo.GetAllList(null));
     }
 
-    [Route("api/inventory/{page:int?}")]
     [HttpGet]
+    [Route("api/inventory/{page:int?}")]
     public async Task<IActionResult> GetAllList(int? page)
     {
         var user = await _account_util.AuthorizeUser(Request);
@@ -42,8 +42,8 @@ public class InventoryController : ControllerBase
         });
     }
 
-    [Route("api/inventory/quick_edit")]
     [HttpPost]
+    [Route("api/inventory/quick_edit")]
     public async Task<IActionResult> QuickUpdate()
     {
         var user = await _account_util.AuthorizeUser(Request);

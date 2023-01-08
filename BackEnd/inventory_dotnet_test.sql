@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 22, 2022 at 08:01 AM
--- Server version: 10.4.21-MariaDB
--- PHP Version: 8.0.10
+-- Generation Time: Jan 08, 2023 at 10:37 AM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.1.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -40,16 +40,19 @@ CREATE TABLE `asset` (
   `status` smallint(5) UNSIGNED NOT NULL,
   `user_id` int(11) NOT NULL,
   `next_user_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `asset`
 --
 
 INSERT INTO `asset` (`id`, `name`, `model`, `serial`, `purchase_date`, `warranty`, `creation_date`, `description`, `type`, `status`, `user_id`, `next_user_id`) VALUES
-(1, 'HP Desktop', 'Pavillion', 'ABCD1234', '2021-02-02 15:27:50.000000', 1089, '2022-03-23 15:27:50.000000', 'Normal HP desktop', 1, 0, 5, 4),
+(1, 'HP Desktop', 'Pavillion', 'ABCD1234', '2021-02-02 15:27:50.000000', 1089, '2022-03-23 15:27:50.000000', 'Normal HP desktop', 1, 0, 5, NULL),
 (2, 'HP Laptop', 'Specter', 'ABCD1234', '2021-02-02 15:27:50.000000', 1098, '2022-03-23 15:27:50.000000', '', 2, 0, 5, NULL),
-(3, 'Epson Printer', 'L565', 'ABCD4321', '1970-01-18 12:46:04.800000', 730, '0001-01-01 00:00:00.000000', 'Color printer with liquid ink...', 3, 0, 4, NULL);
+(3, 'Epson Printer', 'L565', 'ABCD4321', '1970-01-18 12:46:04.800000', 730, '0001-01-01 00:00:00.000000', 'Color printer with liquid ink...', 3, 0, 4, NULL),
+(5, 'HP Printer', 'HP LaserJet 107a', 'ABCD', '1970-01-20 00:05:45.600000', 365, '0001-01-01 00:00:00.000000', 'Monochrome printer', 3, 0, 6, NULL),
+(6, 'Dell Desktop', 'Dell OptiPlex 3090', 'ABCD', '1970-01-20 05:18:14.400000', 365, '0001-01-01 00:00:00.000000', 'Dell desktop', 1, 0, 6, NULL),
+(7, 'HP Spectre x360', 'HP Spectre x360', 'ABCD', '1970-01-19 19:43:40.800000', 365, '0001-01-01 00:00:00.000000', '', 2, 0, 4, NULL);
 
 -- --------------------------------------------------------
 
@@ -63,14 +66,18 @@ CREATE TABLE `assethistory` (
   `asset_id` bigint(20) NOT NULL,
   `from_user_id` int(11) NOT NULL,
   `to_user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `assethistory`
 --
 
 INSERT INTO `assethistory` (`id`, `creation_date`, `asset_id`, `from_user_id`, `to_user_id`) VALUES
-(1, '2022-04-07 05:30:49.095487', 3, 5, 4);
+(1, '2022-04-07 05:30:49.095487', 3, 5, 4),
+(3, '2023-01-01 08:14:39.973010', 5, 6, 6),
+(4, '2023-01-01 08:15:53.093589', 6, 6, 6),
+(5, '2023-01-01 08:19:37.412216', 7, 6, 6),
+(6, '2023-01-01 08:24:42.189388', 7, 6, 4);
 
 -- --------------------------------------------------------
 
@@ -85,26 +92,27 @@ CREATE TABLE `inventory` (
   `unit` varchar(255) NOT NULL,
   `count` int(10) UNSIGNED NOT NULL,
   `last_modified_date` datetime(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `inventory`
 --
 
 INSERT INTO `inventory` (`id`, `name`, `description`, `unit`, `count`, `last_modified_date`) VALUES
-(1, 'Facial Tissue Box', 'Facial tissue box', 'box', 55, '2022-03-20 12:45:06.000000'),
-(2, 'Toilet Tissue', 'Toilet tissue', 'unit', 97, '2022-03-20 12:45:23.000000'),
-(3, 'Pencil', 'Wood pencil', 'piece', 100, '2022-03-20 12:45:31.000000'),
+(1, 'Facial Tissue Box', 'Facial tissue box', 'box', 57, '2022-12-29 06:44:26.433050'),
+(2, 'Toilet Tissue', 'Toilet tissue', 'unit', 96, '2023-01-01 09:43:43.339897'),
+(3, 'Pencil', 'Wood pencil', 'piece', 100, '2023-01-01 09:43:04.434700'),
 (4, 'Black Pen', 'Black ball point pen', 'piece', 155, '2022-03-20 12:45:38.000000'),
 (5, 'Glue', '', 'unit', 49, '0001-01-01 00:00:00.000000'),
-(6, 'Stapler Pin (large)', 'Stapler pin box of large size', 'box', 100, '0001-01-01 00:00:00.000000'),
+(6, 'Stapler Pin (large)', 'Stapler pin box of large size', 'box', 98, '2022-12-27 08:42:27.372830'),
 (7, 'Red pen', 'Red color pen', 'item', 33, '0001-01-01 00:00:00.000000'),
-(8, 'Cloth Duster', 'Cloth duster for cleaning work', 'piece', 40, '0001-01-01 00:00:00.000000'),
+(8, 'Cloth Duster', 'Cloth duster for cleaning work', 'piece', 39, '0001-01-01 00:00:00.000000'),
 (9, 'Handwash refill', 'Refill packet for handwash', 'packet', 80, '0001-01-01 00:00:00.000000'),
 (10, 'Stapler', '', 'piece', 30, '0001-01-01 00:00:00.000000'),
 (11, 'Punch machine (double punch)', '', 'piece', 20, '0001-01-01 00:00:00.000000'),
 (12, 'Punch machine (single punch)', '', 'piece', 35, '0001-01-01 00:00:00.000000'),
-(13, 'Paperweight', 'Glass paperweight', 'piece', 42, '0001-01-01 00:00:00.000000');
+(13, 'Paperweight', 'Glass paperweight', 'piece', 42, '0001-01-01 00:00:00.000000'),
+(14, 'Hand sanitizer', 'Liquid hand sanitizer', 'bottle', 30, '2023-01-01 09:45:16.067071');
 
 -- --------------------------------------------------------
 
@@ -116,7 +124,7 @@ CREATE TABLE `leave` (
   `id` bigint(20) NOT NULL,
   `title` varchar(255) NOT NULL,
   `creation_date` datetime(6) NOT NULL,
-  `approved` tinyint(1) NOT NULL,
+  `approved` tinyint(1) DEFAULT NULL,
   `approve_date` datetime(6) DEFAULT NULL,
   `start_date` datetime(6) NOT NULL,
   `end_date` datetime(6) NOT NULL,
@@ -124,7 +132,7 @@ CREATE TABLE `leave` (
   `comment` longtext NOT NULL,
   `approver_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `leave`
@@ -132,7 +140,11 @@ CREATE TABLE `leave` (
 
 INSERT INTO `leave` (`id`, `title`, `creation_date`, `approved`, `approve_date`, `start_date`, `end_date`, `day_count`, `comment`, `approver_id`, `user_id`) VALUES
 (2, 'A one-day leave needed', '0001-01-01 00:00:00.000000', 1, '2022-12-22 06:59:33.151367', '2022-12-22 00:00:00.000000', '2022-12-22 00:00:00.000000', 1, 'A one-day leave needed due to sickness.', 7, 5),
-(3, 'Two days leave needed', '0001-01-01 00:00:00.000000', 0, NULL, '2023-01-25 00:00:00.000000', '2023-01-26 00:00:00.000000', 2, '2 days leave needed due to family visit in next year.', 7, 5);
+(3, 'Two days leave needed', '0001-01-01 00:00:00.000000', 0, '2023-01-02 08:54:52.476249', '2023-01-25 00:00:00.000000', '2023-01-26 00:00:00.000000', 2, '2 days leave needed due to family visit in next year.', 7, 5),
+(13, 'One day leave needed', '2022-12-27 08:16:14.711885', 1, '2022-12-27 08:33:55.170764', '2022-12-28 00:00:00.000000', '2022-12-28 00:00:00.000000', 1, 'One day leave needed', 7, 4),
+(14, 'Two days leave needed', '2022-12-27 08:16:50.414138', 1, '2022-12-27 08:33:15.073242', '2022-12-28 00:00:00.000000', '2022-12-29 00:00:00.000000', 2, '2 days leave needed', 7, 6),
+(15, 'One day leave needed', '2023-01-02 08:16:14.762217', 0, '2023-01-02 08:54:55.371103', '2023-02-05 00:00:00.000000', '2023-02-05 00:00:00.000000', 1, 'One day leave needed', 7, 6),
+(16, 'Three days leave needed', '2023-01-02 08:16:47.751249', 1, '2023-01-02 08:54:28.630476', '2023-01-03 00:00:00.000000', '2023-01-03 00:00:00.000000', 1, '3 days leave needed', 7, 4);
 
 -- --------------------------------------------------------
 
@@ -154,16 +166,22 @@ CREATE TABLE `requisition` (
   `approve_date` datetime(6) DEFAULT NULL,
   `distribution_date` datetime(6) DEFAULT NULL,
   `request_date` datetime(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `requisition`
 --
 
 INSERT INTO `requisition` (`id`, `approved`, `title`, `amount`, `comment`, `approver_id`, `inventory_id`, `user_id`, `distributed`, `distributor_id`, `approve_date`, `distribution_date`, `request_date`) VALUES
-(1, NULL, 'A pencil needed', 1, 'Pencil is needed to make draft', 4, 3, 5, NULL, NULL, NULL, NULL, '2022-12-22 01:28:04.347216'),
+(1, 1, 'A pencil needed', 1, 'Pencil is needed to make draft', 4, 3, 5, 1, 6, '2022-12-27 04:30:09.009867', '2022-12-27 08:39:20.687072', '2022-12-22 01:28:04.347216'),
 (2, 1, 'Glue needed', 1, 'Glue needed for stationary work', 4, 5, 4, 1, 6, NULL, '2022-12-22 07:37:29.263552', '2022-12-22 01:37:14.845981'),
-(3, NULL, 'One tissue paper needed', 1, '', 4, 1, 5, NULL, NULL, NULL, NULL, '2022-12-22 05:32:57.641430');
+(3, 1, 'One tissue paper needed', 1, '', 4, 1, 5, NULL, 6, '2022-12-27 04:30:06.464524', NULL, '2022-12-22 05:32:57.641430'),
+(4, 0, 'A glue stick needed', 1, '', 4, 5, 5, NULL, NULL, '2023-01-02 07:53:34.608565', NULL, '2022-12-27 04:27:07.578826'),
+(5, 1, 'A cloth duster needed', 1, '', 4, 8, 5, 1, 6, '2022-12-27 04:30:12.773358', '2022-12-27 04:45:15.097698', '2022-12-27 04:27:20.528775'),
+(6, 1, 'A punch machine needed', 1, '', 4, 11, 5, NULL, 6, '2023-01-02 08:13:30.685148', NULL, '2022-12-27 04:27:32.606736'),
+(7, 0, 'A paperweight needed', 1, '', 4, 13, 5, NULL, NULL, '2023-01-02 07:52:58.205726', NULL, '2022-12-27 04:27:44.231213'),
+(8, 0, 'A handwash refill needed', 1, '', 4, 9, 4, NULL, NULL, '2023-01-02 08:13:19.698345', NULL, '2023-01-02 06:51:06.712001'),
+(9, 1, ' A pencil needed', 1, '', 4, 3, 4, NULL, 6, '2023-01-02 08:13:25.341865', NULL, '2023-01-02 06:51:44.279135');
 
 -- --------------------------------------------------------
 
@@ -187,16 +205,16 @@ CREATE TABLE `user` (
   `can_distribute_inventory` tinyint(1) NOT NULL,
   `can_approve_leave` tinyint(1) NOT NULL,
   `can_manage_asset` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user`
 --
 
 INSERT INTO `user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_active`, `date_joined`, `supervisor_id`, `can_approve_inventory`, `can_distribute_inventory`, `can_approve_leave`, `can_manage_asset`) VALUES
-(4, '100000.gcd/tzgVo2bdtDi/wQh+fA==.xlKhxENKuXrLQTnXU3nH9gqYBKnx0g13npIfpNRzyOc=', NULL, 0, 'approver', 'Approver', NULL, NULL, 1, '2022-03-21 13:08:04.685672', NULL, 1, 0, 0, 0),
-(5, '100000.jPGjnsgpMQZTPmaCnUrHQw==.NIGEHX1cXunn2V2n9hKTxCpDTjeRb9vY3UNHncwzmzw=', NULL, 0, 'shoaib.rahman', 'Mina Shoaib', 'Rahman', 'shoaibsaikat@gmail.com', 1, '2022-03-21 13:31:32.868637', 7, 0, 0, 1, 1),
-(6, '100000.xmocMvZiMdVzupx6r9dRPw==.xPJqx0q8mPCDnWDmrSYcETRFR4j1S+YnyVgLeVbmD6M=', NULL, 0, 'distributor', 'Distributor', NULL, NULL, 1, '2022-12-22 07:26:35.999722', NULL, 0, 1, 0, 0),
+(4, '100000.gcd/tzgVo2bdtDi/wQh+fA==.xlKhxENKuXrLQTnXU3nH9gqYBKnx0g13npIfpNRzyOc=', NULL, 0, 'approver', 'Approver', NULL, NULL, 1, '2022-03-21 13:08:04.685672', 7, 1, 0, 0, 1),
+(5, '100000.jPGjnsgpMQZTPmaCnUrHQw==.NIGEHX1cXunn2V2n9hKTxCpDTjeRb9vY3UNHncwzmzw=', NULL, 0, 'shoaib.rahman', 'Mina Shoaib', 'Rahman', 'shoaib.rahman@beza.gov.bd', 1, '2022-03-21 13:31:32.868637', 7, 0, 0, 0, 0),
+(6, '100000.xmocMvZiMdVzupx6r9dRPw==.xPJqx0q8mPCDnWDmrSYcETRFR4j1S+YnyVgLeVbmD6M=', NULL, 0, 'distributor', 'Distributor', NULL, NULL, 1, '2022-12-22 07:26:35.999722', 7, 0, 1, 0, 1),
 (7, '100000.quwqWcaFAzk3Wq1sV+L7cw==.LrOoDUK6tuf2zoe8R1mfeJZixekM34DO9cjJiTE2lyk=', NULL, 0, 'manager', 'Manager', 'Office', 'abcd@abcd.com', 1, '2022-12-22 09:42:56.834157', 7, 0, 0, 1, 0);
 
 -- --------------------------------------------------------
@@ -208,7 +226,7 @@ INSERT INTO `user` (`id`, `password`, `last_login`, `is_superuser`, `username`, 
 CREATE TABLE `__efmigrationshistory` (
   `MigrationId` varchar(150) NOT NULL,
   `ProductVersion` varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `__efmigrationshistory`
@@ -216,8 +234,10 @@ CREATE TABLE `__efmigrationshistory` (
 
 INSERT INTO `__efmigrationshistory` (`MigrationId`, `ProductVersion`) VALUES
 ('20220319092956_Table creation', '6.0.3'),
-('20220321062203_user null fields added', '6.0.3'),
-('20220605042959_inventory description made nullable', '6.0.3');
+('20220321062203_User null fields added', '6.0.3'),
+('20220605042959_Inventory description made nullable', '6.0.3'),
+('20230102070707_Leave approval nullable', '6.0.10'),
+('20230102144000_Dotnet upgrade', '7.0.1');
 
 --
 -- Indexes for dumped tables
@@ -287,31 +307,31 @@ ALTER TABLE `__efmigrationshistory`
 -- AUTO_INCREMENT for table `asset`
 --
 ALTER TABLE `asset`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `assethistory`
 --
 ALTER TABLE `assethistory`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `leave`
 --
 ALTER TABLE `leave`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `requisition`
 --
 ALTER TABLE `requisition`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `user`

@@ -4,7 +4,7 @@
 
 namespace _NET_Office_Management_BackEnd.Migrations
 {
-    public partial class inventorydescriptionmadenullable : Migration
+    public partial class Inventorydescriptionmadenullable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

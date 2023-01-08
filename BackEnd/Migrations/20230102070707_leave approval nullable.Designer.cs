@@ -11,8 +11,8 @@ using _NET_Office_Management_BackEnd.Models;
 namespace _NET_Office_Management_BackEnd.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230102070707_leave approval nullable")]
-    partial class leaveapprovalnullable
+    [Migration("20230102070707_Leave approval nullable")]
+    partial class Leaveapprovalnullable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

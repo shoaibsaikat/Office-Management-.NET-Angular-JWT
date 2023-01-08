@@ -4,7 +4,7 @@
 
 namespace _NET_Office_Management_BackEnd.Migrations
 {
-    public partial class usernullfieldsadded : Migration
+    public partial class Usernullfieldsadded : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

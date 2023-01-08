@@ -11,8 +11,8 @@ using _NET_Office_Management_BackEnd.Models;
 namespace _NET_Office_Management_BackEnd.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220321062203_user null fields added")]
-    partial class usernullfieldsadded
+    [Migration("20220321062203_User null fields added")]
+    partial class Usernullfieldsadded
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

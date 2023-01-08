@@ -5,7 +5,7 @@
 namespace NETOfficeManagementBackEnd.Migrations
 {
     /// <inheritdoc />
-    public partial class dotnetupgrade : Migration
+    public partial class Dotnetupgrade : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

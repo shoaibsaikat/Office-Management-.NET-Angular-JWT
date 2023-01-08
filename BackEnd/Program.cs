@@ -36,22 +36,22 @@ builder.Services.AddScoped<IAccountUtil, AccountUtil>();
 builder.Services.AddScoped<ICommonUtil, CommonUtil>();
 
 // CORS
-// var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+var  OfficeManagementOrigins = "_officeManagementSpecificOrigins";
+// TODO: allow specific origin does not work
 // builder.Services.AddCors(options =>
 // {
-//     options.AddPolicy(name: MyAllowSpecificOrigins, builder =>
+//     options.AddPolicy(name: OfficeManagementOrigins, builder =>
 //     {
-//         builder.WithOrigins("http://127.0.0.1:4200", "http://localhost:4200")
-//         .AllowAnyHeader()
-//         .AllowAnyMethod()
-//         .AllowCredentials();
+//         builder.WithOrigins("http://localhost:4200")
+//                 .WithMethods("PUT", "POST", "GET")
+//                 .WithHeaders("Content-Type", "Authorization");
 //     });
 // });
 
-//services cors
-builder.Services.AddCors(p => p.AddPolicy("MyAllowSpecificOrigins", builder =>
+// allow all
+builder.Services.AddCors(options => options.AddPolicy(OfficeManagementOrigins, builder =>
 {
-    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+    builder.WithOrigins("*").WithMethods("PUT", "POST", "GET").WithHeaders("Content-Type", "Authorization");
 }));
 
 // JWT
@@ -82,7 +82,7 @@ var app = builder.Build();
 
 app.UseRouting();
 
-app.UseCors("MyAllowSpecificOrigins");
+app.UseCors(OfficeManagementOrigins);
 
 app.UseHttpsRedirection();
 

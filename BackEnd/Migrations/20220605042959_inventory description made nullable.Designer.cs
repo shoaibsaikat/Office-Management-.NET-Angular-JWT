@@ -11,8 +11,8 @@ using _NET_Office_Management_BackEnd.Models;
 namespace _NET_Office_Management_BackEnd.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220605042959_inventory description made nullable")]
-    partial class inventorydescriptionmadenullable
+    [Migration("20220605042959_Inventory description made nullable")]
+    partial class Inventorydescriptionmadenullable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

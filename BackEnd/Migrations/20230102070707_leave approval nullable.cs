@@ -4,7 +4,7 @@
 
 namespace _NET_Office_Management_BackEnd.Migrations
 {
-    public partial class leaveapprovalnullable : Migration
+    public partial class Leaveapprovalnullable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
