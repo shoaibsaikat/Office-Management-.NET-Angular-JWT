@@ -22,7 +22,7 @@ Entity Framework Core:
 8. dotnet tool update --global dotnet-ef
 
 MariaDB:
-1. dotnet add package Pomelo.EntityFrameworkCore.MySql
+1. dotnet add package Pomelo.EntityFrameworkCore.MySql --version 7.0.0-silver.1
 
 Database Scaffolding / Reverse Engineering:
 1. dotnet ef dbcontext scaffold -o "<folder_name>" "Server=localhost;User=<user>;Password=<password>;Database=<db_name>" "Pomelo.EntityFrameworkCore.MySql"
