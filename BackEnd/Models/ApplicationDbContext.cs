@@ -17,6 +17,8 @@ namespace _NET_Office_Management_BackEnd.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // NOTE: only properties which are mapped with changed name of table column is writter here
+            // others are mapped by default configuration, so no need to mention explicitly
             modelBuilder.Entity<User>(entity =>
             {
                 entity.ToTable("user");
@@ -33,7 +35,9 @@ namespace _NET_Office_Management_BackEnd.Models
                 entity.Property(e => e.CanManageAsset).HasColumnName("can_manage_asset");
                 entity.Property(e => e.SupervisorId).HasColumnName("supervisor_id");
 
-                entity.HasOne(d => d.Supervisor).WithMany(p => p.UserSupervisors);
+                entity.HasOne(d => d.Supervisor)
+                        .WithMany(p => p.UserSupervisors)
+                        .HasForeignKey(d => d.SupervisorId);
             });
 
             modelBuilder.Entity<Asset>(entity =>
@@ -46,8 +50,13 @@ namespace _NET_Office_Management_BackEnd.Models
                 entity.Property(e => e.PurchaseDate).HasColumnName("purchase_date");
                 entity.Property(e => e.UserId).HasColumnName("user_id");
 
-                entity.HasOne(d => d.NextUser).WithMany(p => p.AssetNextUsers);
-                entity.HasOne(d => d.User).WithMany(p => p.AssetUsers);
+                entity.HasOne(d => d.NextUser)
+                        .WithMany(p => p.AssetNextUsers)
+                        .HasForeignKey(d => d.NextUserId);
+                entity.HasOne(d => d.User)
+                        .WithMany(p => p.AssetUsers)
+                        .HasForeignKey(d => d.UserId)
+                        .OnDelete(DeleteBehavior.ClientSetNull);
             });
 
             modelBuilder.Entity<AssetHistory>(entity =>
@@ -59,9 +68,18 @@ namespace _NET_Office_Management_BackEnd.Models
                 entity.Property(e => e.FromUserId).HasColumnName("from_user_id");
                 entity.Property(e => e.ToUserId).HasColumnName("to_user_id");
 
-                entity.HasOne(d => d.Asset).WithMany(p => p.AssetHistories);
-                entity.HasOne(d => d.FromUser).WithMany(p => p.AssetHistoryFromUsers);
-                entity.HasOne(d => d.ToUser).WithMany(p => p.AssetHistoryToUsers);
+                entity.HasOne(d => d.Asset)
+                        .WithMany(p => p.AssetHistories)
+                        .HasForeignKey(d => d.AssetId)
+                        .OnDelete(DeleteBehavior.ClientSetNull);
+                entity.HasOne(d => d.FromUser)
+                        .WithMany(p => p.AssetHistoryFromUsers)
+                        .HasForeignKey(d => d.FromUserId)
+                        .OnDelete(DeleteBehavior.ClientSetNull);
+                entity.HasOne(d => d.ToUser)
+                        .WithMany(p => p.AssetHistoryToUsers)
+                        .HasForeignKey(d => d.ToUserId)
+                        .OnDelete(DeleteBehavior.ClientSetNull);
             });
 
             modelBuilder.Entity<Inventory>(entity =>
@@ -83,10 +101,21 @@ namespace _NET_Office_Management_BackEnd.Models
                 entity.Property(e => e.RequestDate).HasColumnName("request_date");
                 entity.Property(e => e.UserId).HasColumnName("user_id");
 
-                entity.HasOne(d => d.Approver).WithMany(p => p.RequisitionApprovers);
-                entity.HasOne(d => d.Distributor).WithMany(p => p.RequisitionDistributors);
-                entity.HasOne(d => d.Inventory).WithMany(p => p.Requisitions);
-                entity.HasOne(d => d.User).WithMany(p => p.RequisitionUsers);
+                entity.HasOne(d => d.Approver)
+                        .WithMany(p => p.RequisitionApprovers)
+                        .HasForeignKey(d => d.ApproverId)
+                        .OnDelete(DeleteBehavior.ClientSetNull);
+                entity.HasOne(d => d.Distributor)
+                        .WithMany(p => p.RequisitionDistributors)
+                        .HasForeignKey(d => d.DistributorId);
+                entity.HasOne(d => d.Inventory)
+                        .WithMany(p => p.Requisitions)
+                        .HasForeignKey(d => d.InventoryId)
+                        .OnDelete(DeleteBehavior.ClientSetNull);
+                entity.HasOne(d => d.User)
+                        .WithMany(p => p.RequisitionUsers)
+                        .HasForeignKey(d => d.UserId)
+                        .OnDelete(DeleteBehavior.ClientSetNull);
             });
 
             modelBuilder.Entity<Leave>(entity =>
@@ -101,8 +130,14 @@ namespace _NET_Office_Management_BackEnd.Models
                 entity.Property(e => e.StartDate).HasColumnName("start_date");
                 entity.Property(e => e.UserId).HasColumnName("user_id");
 
-                entity.HasOne(d => d.Approver).WithMany(p => p.LeaveApprovers);
-                entity.HasOne(d => d.User).WithMany(p => p.LeaveUsers);
+                entity.HasOne(d => d.Approver)
+                        .WithMany(p => p.LeaveApprovers)
+                        .HasForeignKey(d => d.ApproverId)
+                        .OnDelete(DeleteBehavior.ClientSetNull);
+                entity.HasOne(d => d.User)
+                        .WithMany(p => p.LeaveUsers)
+                        .HasForeignKey(d => d.UserId)
+                        .OnDelete(DeleteBehavior.ClientSetNull);
             });
         }
     }
