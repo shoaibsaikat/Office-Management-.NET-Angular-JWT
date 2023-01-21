@@ -26,6 +26,7 @@ namespace _NET_Office_Management_BackEnd.Models
         public int? NextUserId { get; set; }
         public virtual User? NextUser { get; set; }
         public virtual User User { get; set; } = null!;
+
         public virtual ICollection<AssetHistory> AssetHistories { get; set; }
     }
 }

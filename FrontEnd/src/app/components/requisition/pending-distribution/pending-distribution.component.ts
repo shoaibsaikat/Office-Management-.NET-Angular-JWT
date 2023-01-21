@@ -69,6 +69,7 @@ export class PendingDistributionComponent implements OnInit {
     this.requisitionService.distribute(this.requisitionList[index].id).subscribe(data => {
       this.globalService.navigate('requisition/distribution');
       this.requisitionList.splice(index, 1);
+      this.changeDetectorRef.markForCheck();
     });
   }
 
