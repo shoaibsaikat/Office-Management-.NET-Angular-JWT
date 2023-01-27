@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { GlobalService } from 'src/app/services/global/global.service';
 import { RequisitionService } from 'src/app/services/requisition/requisition.service';
@@ -19,7 +19,7 @@ export class PendingApprovalComponent implements OnInit {
 
   requisitionList: Requisition[] = [];
   distributorList: User[] = [];
-  requisitionFormList: UntypedFormGroup[] = [];
+  requisitionFormList: FormGroup[] = [];
 
   // pagination, NOTE: pagination is by 10 in server side and can't be set from client
   listCount: number = 0;
@@ -59,8 +59,8 @@ export class PendingApprovalComponent implements OnInit {
 
         // generate form groups
         this.requisitionList.forEach(element => {
-          this.requisitionFormList.push(new UntypedFormGroup({
-            distributor: new UntypedFormControl('', [Validators.required, ]),
+          this.requisitionFormList.push(new FormGroup({
+            distributor: new FormControl('', [Validators.required, ]),
           }));
         });
       },

@@ -2,21 +2,19 @@
 Angular frontend
 
 Issues:
-1. Fix inventory quickedit update error msg in javascript console
-2. Fix CORS issue in .NET
-3. Fix empty email in profile update and also email error check
+1. Fix inventory quickedit update error msg in javascript console.
+2. Fix CORS issue in .NET.
+3. Fix empty email in profile update and also email error check.
 4. Need to check why response is sometimes parsed as msg.text and sometimes msg. i.e. inventory quick edit vs create.
 
 
 Some helpful commands,
 1. 'npm install --save-dev @angular/cli@latest' to fix 'could not find module '@angular-devkit/build-angular' issue.
-2. 'npm cache clean --force' to clean cache
-
-
+2. 'npm cache clean --force' to clean cache.
+3. 'npm install --legacy-peer-deps' to fix dependency issue.
 
 Need to do:
-1. Loading screen
-
+1. Loading screen.
 
 Error Response Example:
 1. Login Error:
