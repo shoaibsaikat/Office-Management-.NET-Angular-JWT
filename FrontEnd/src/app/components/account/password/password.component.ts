@@ -38,7 +38,7 @@ export class PasswordComponent implements OnInit {
       return;
     }
 
-    this.accountService.setPassword(this.passwordForm.value.oldPassword, this.passwordForm.value.newPassword1).subscribe({
+    this.accountService.setPassword(this.passwordForm.value.oldPassword || '', this.passwordForm.value.newPassword1 || '').subscribe({
       next: (v) => {
 		    // console.log('PasswordComponent: ' + data.detail);
       },

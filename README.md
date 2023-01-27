@@ -1,7 +1,7 @@
-# .NET-Office-Management-BackEnd [Work in progress, not finished yet!]
-Office Mangement Backend using .NET 6 Web Api with JWT authentication &amp; MariaDB
+# .NET-Office-Management-BackEnd
+Office Mangement Backend using .NET 7.0 Web Api with JWT authentication &amp; MariaDB
 
-Note: JWT token in not saved anywhere. This project only shows how we can use JWT token.
+Note: JWT token is not saved anywhere. This project only shows how we can use JWT token.
 We can save it in database and also use refresh token to generated new access token after some time peroid.
 These features may or may not be implemented in future.
 

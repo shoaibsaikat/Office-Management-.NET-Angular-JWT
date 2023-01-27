@@ -10,6 +10,7 @@ Issues:
 
 Some helpful commands,
 1. 'npm install --save-dev @angular/cli@latest' to fix 'could not find module '@angular-devkit/build-angular' issue.
+2. 'npm cache clean --force' to clean cache
 
 
 

@@ -30,7 +30,7 @@
     <div class="row">
       <!-- start: left pane -->
       <div class="col-md-2">
-        <span *ngIf="isValidUser()">
+        <div *ngIf="isValidUser()">
           <!-- user info change -->
           <div class="card bg-light">
             <div class="card-header bg-info bg-opacity-50"><strong>Account</strong></div>
@@ -48,14 +48,14 @@
             <div class="card-header bg-info bg-opacity-50"><strong>Asset</strong></div>
             <div class="card-body">
               <div class="list-group">
-                  <a *ngIf="getUser().can_manage_asset" class="nav-link list-group-item" routerLink="/asset/all_list">List</a>
-                  <a *ngIf="getUser().can_manage_asset" class="nav-link list-group-item" routerLink="/asset/create">Create</a>
-                  <a class="nav-link list-group-item" routerLink="/asset/my_list">Mine</a>
-                  <a class="nav-link list-group-item" routerLink="/asset/pending_list">Incoming</a>
+                <a *ngIf="getUser().can_manage_asset" class="nav-link list-group-item" routerLink="/asset/all_list">List</a>
+                <a *ngIf="getUser().can_manage_asset" class="nav-link list-group-item" routerLink="/asset/create">Create</a>
+                <a class="nav-link list-group-item" routerLink="/asset/my_list">Mine</a>
+                <a class="nav-link list-group-item" routerLink="/asset/pending_list">Incoming</a>
               </div>
             </div>
           </div>
-        </span>
+        </div>
       </div>
       <!-- end: left pane -->
       <!-- content body -->
@@ -67,18 +67,18 @@
       </div>
       <!-- start: right pane -->
       <div class="col-md-2" style="text-align: left;">
-        <span *ngIf="isValidUser()">
+        <div *ngIf="isValidUser()">
           <!-- inventory -->
           <div class="card bg-light">
             <div class="card-header bg-info bg-opacity-50"><strong>Inventory</strong></div>
             <div class="card-body">
               <div class="list-group">
-                  <a *ngIf="getUser().can_approve_inventory || getUser().can_distribute_inventory" class="nav-link list-group-item" routerLink="/inventory/list">List</a>
-                  <a *ngIf="getUser().can_approve_inventory || getUser().can_distribute_inventory" class="nav-link list-group-item" routerLink="/requisition/history">History</a>
-                  <a class="nav-link list-group-item" routerLink="/requisition/create">Request</a>
-                  <a class="nav-link list-group-item" routerLink="/requisition/my_list">Mine</a>
-                  <a *ngIf="getUser().can_approve_inventory" class="nav-link list-group-item" routerLink="/requisition/approval">Incoming</a>
-                  <a *ngIf="getUser().can_distribute_inventory" class="nav-link list-group-item" routerLink="/requisition/distribution">Distribution</a>
+                <a *ngIf="getUser().can_approve_inventory || getUser().can_distribute_inventory" class="nav-link list-group-item" routerLink="/inventory/list">List</a>
+                <a *ngIf="getUser().can_approve_inventory || getUser().can_distribute_inventory" class="nav-link list-group-item" routerLink="/requisition/history">History</a>
+                <a class="nav-link list-group-item" routerLink="/requisition/create">Request</a>
+                <a class="nav-link list-group-item" routerLink="/requisition/my_list">Mine</a>
+                <a *ngIf="getUser().can_approve_inventory" class="nav-link list-group-item" routerLink="/requisition/approval">Incoming</a>
+                <a *ngIf="getUser().can_distribute_inventory" class="nav-link list-group-item" routerLink="/requisition/distribution">Distribution</a>
               </div>
             </div>
           </div>
@@ -95,7 +95,7 @@
               </div>
             </div>
           </div>
-        </span>
+        </div>
         <br>
       </div>
       <!-- end: right pane -->
