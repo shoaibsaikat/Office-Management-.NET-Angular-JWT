@@ -1,6 +1,9 @@
 # .NET-Office-Management-BackEnd
 Office Mangement Backend using .NET 7.0 Web Api with JWT authentication &amp; MariaDB
 
+# Warning:
+At new version of chrome unauthorized ssl certificate gives issue. So at current browser it's not runnable. Working on the fix.
+
 Note: JWT token is not saved anywhere. This project only shows how we can use JWT token.
 We can save it in database and also use refresh token to generated new access token after some time peroid.
 These features may or may not be implemented in future.

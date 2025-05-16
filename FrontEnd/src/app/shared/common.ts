@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class Common {
 
     // private baseUrl: string = 'https://127.0.0.1:7000/api/';
-    private static baseUrl: string = 'http://127.0.0.1:5031/api/';
+    private static baseUrl: string = 'http://localhost:5031/api/';
 
     static readonly DETAIL_NORMAL: number = 0;
     static readonly DETAIL_APPROVAL: number = 1;
@@ -18,6 +18,7 @@ export class Common {
     }
 
     static getHttpHeader(): {} {
+        // console.log('Http header token: ' + localStorage.getItem('access_token'));
         return {
           headers: new HttpHeaders({
           'Content-Type':  'application/json',
