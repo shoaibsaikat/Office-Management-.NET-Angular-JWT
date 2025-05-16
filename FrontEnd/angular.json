@@ -106,5 +106,8 @@
       }
     }
   },
-  "defaultProject": "Angular-Office-Management"
+  "defaultProject": "Angular-Office-Management",
+  "cli": {
+    "analytics": false
+  }
 }
