@@ -79,11 +79,11 @@ public class AccountController : ControllerBase
     [Consumes("application/json")]
     public async Task<IActionResult> Get()
     {
-        // var userId = _account_util.AuthorizeRequest(Request);
-        // if (userId == null)
-        // {
-        //     return Unauthorized();
-        // }
+        var userId = _account_util.AuthorizeRequest(Request);
+        if (userId == null)
+        {
+            return Unauthorized();
+        }
         var user = await _account_repo.GetUserById(userId.Value);
         return Ok(user);
     }
