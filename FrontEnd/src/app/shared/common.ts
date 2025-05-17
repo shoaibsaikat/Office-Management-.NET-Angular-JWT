@@ -18,12 +18,14 @@ export class Common {
     }
 
     static getHttpHeader(): {} {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type':  'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+            })
+        };
         // console.log('Http header token: ' + localStorage.getItem('access_token'));
-        return {
-          headers: new HttpHeaders({
-          'Content-Type':  'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem('access_token'),
-        })}
+        return httpOptions;
     }
 
 }

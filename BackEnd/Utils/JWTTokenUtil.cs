@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 
 namespace _NET_Office_Management_BackEnd.Utils;
+
 class JWTTokenUtil : ITokenUtil
 {
     private readonly IConfiguration _configuration;
@@ -78,7 +79,7 @@ class JWTTokenUtil : ITokenUtil
         }
     }
 
-    
+
 
 }
 
