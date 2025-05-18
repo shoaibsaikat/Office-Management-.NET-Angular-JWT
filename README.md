@@ -2,7 +2,7 @@
 Office Mangement Backend using .NET 7.0 Web Api with JWT authentication &amp; MariaDB
 
 # Warning:
-At new version of chrome unauthorized ssl certificate gives issue. So at current browser it's not runnable. Working on the fix.
+At new version of chrome unauthorized ssl certificate gives issue. Previously it could be fixed by ignoring the warning but now valid ssl certificate has to be generated to run authorization properly.
 
 Note: JWT token is not saved anywhere. This project only shows how we can use JWT token.
 We can save it in database and also use refresh token to generated new access token after some time peroid.
